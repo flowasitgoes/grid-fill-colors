@@ -9,280 +9,280 @@ export const LEVELS: Level[] = [
     id: 1,
     name: '關卡 1 - 十字圖案',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#8e44ad', '#f1c40f'],
     difficulty: 'easy',
     solution: [
-      ['red', 'red', 'blue', 'red', 'red'],
-      ['red', 'red', 'blue', 'red', 'red'],
-      ['blue', 'blue', 'blue', 'blue', 'blue'],
-      ['red', 'red', 'blue', 'red', 'red'],
-      ['red', 'red', 'blue', 'red', 'red']
+      ['#8e44ad', '#8e44ad', '#f1c40f', '#8e44ad', '#8e44ad'],
+      ['#8e44ad', '#8e44ad', '#f1c40f', '#8e44ad', '#8e44ad'],
+      ['#f1c40f', '#f1c40f', '#f1c40f', '#f1c40f', '#f1c40f'],
+      ['#8e44ad', '#8e44ad', '#f1c40f', '#8e44ad', '#8e44ad'],
+      ['#8e44ad', '#8e44ad', '#f1c40f', '#8e44ad', '#8e44ad']
     ],
     rowHints: [
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }]
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#f1c40f', count: 5 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }]
     ],
     columnHints: [
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }]
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#f1c40f', count: 5 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }],
+      [{ color: '#8e44ad', count: 2 }, { color: '#f1c40f', count: 1 }, { color: '#8e44ad', count: 2 }]
     ]
   },
   {
     id: 2,
     name: '關卡 2 - 豎條紋',
     size: 5,
-    colors: ['blue', 'white'],
+    colors: ['#ff9ff3', '#fbc531'],
     difficulty: 'easy',
     solution: [
-      ['blue', 'white', 'blue', 'white', 'blue'],
-      ['blue', 'white', 'blue', 'white', 'blue'],
-      ['blue', 'white', 'blue', 'white', 'blue'],
-      ['blue', 'white', 'blue', 'white', 'blue'],
-      ['blue', 'white', 'blue', 'white', 'blue']
+      ['#ff9ff3', '#fbc531', '#ff9ff3', '#fbc531', '#ff9ff3'],
+      ['#ff9ff3', '#fbc531', '#ff9ff3', '#fbc531', '#ff9ff3'],
+      ['#ff9ff3', '#fbc531', '#ff9ff3', '#fbc531', '#ff9ff3'],
+      ['#ff9ff3', '#fbc531', '#ff9ff3', '#fbc531', '#ff9ff3'],
+      ['#ff9ff3', '#fbc531', '#ff9ff3', '#fbc531', '#ff9ff3']
     ],
     rowHints: [
-      [{ color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }, { color: 'white', count: 1 }, { color: 'blue', count: 1 }]
+      [{ color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }],
+      [{ color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }],
+      [{ color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }],
+      [{ color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }],
+      [{ color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }, { color: '#fbc531', count: 1 }, { color: '#ff9ff3', count: 1 }]
     ],
     columnHints: [
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'white', count: 5 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'white', count: 5 }],
-      [{ color: 'blue', count: 5 }]
+      [{ color: '#ff9ff3', count: 5 }],
+      [{ color: '#fbc531', count: 5 }],
+      [{ color: '#ff9ff3', count: 5 }],
+      [{ color: '#fbc531', count: 5 }],
+      [{ color: '#ff9ff3', count: 5 }]
     ]
   },
   {
     id: 3,
     name: '關卡 3 - 笑臉圖案',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#e74c3c', '#ecf0f1'],
     difficulty: 'medium',
     solution: [
-      ['blue', 'red', 'blue', 'red', 'blue'],
-      ['blue', 'red', 'blue', 'red', 'blue'],
-      ['blue', 'blue', 'blue', 'blue', 'blue'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['blue', 'red', 'red', 'red', 'blue']
+      ['#ecf0f1', '#e74c3c', '#ecf0f1', '#e74c3c', '#ecf0f1'],
+      ['#ecf0f1', '#e74c3c', '#ecf0f1', '#e74c3c', '#ecf0f1'],
+      ['#ecf0f1', '#ecf0f1', '#ecf0f1', '#ecf0f1', '#ecf0f1'],
+      ['#e74c3c', '#ecf0f1', '#ecf0f1', '#ecf0f1', '#e74c3c'],
+      ['#ecf0f1', '#e74c3c', '#e74c3c', '#e74c3c', '#ecf0f1']
     ],
     rowHints: [
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }]
+      [{ color: '#ecf0f1', count: 1 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }],
+      [{ color: '#ecf0f1', count: 1 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }],
+      [{ color: '#ecf0f1', count: 5 }],
+      [{ color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 3 }, { color: '#e74c3c', count: 1 }],
+      [{ color: '#ecf0f1', count: 1 }, { color: '#e74c3c', count: 3 }, { color: '#ecf0f1', count: 1 }]
     ],
     columnHints: [
-      [{ color: 'blue', count: 3 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 2 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 4 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 2 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 3 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }]
+      [{ color: '#ecf0f1', count: 3 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }],
+      [{ color: '#e74c3c', count: 2 }, { color: '#ecf0f1', count: 2 }, { color: '#e74c3c', count: 1 }],
+      [{ color: '#ecf0f1', count: 4 }, { color: '#e74c3c', count: 1 }],
+      [{ color: '#e74c3c', count: 2 }, { color: '#ecf0f1', count: 2 }, { color: '#e74c3c', count: 1 }],
+      [{ color: '#ecf0f1', count: 3 }, { color: '#e74c3c', count: 1 }, { color: '#ecf0f1', count: 1 }]
     ]
   },
   {
     id: 4,
     name: '關卡 4 - 對角線',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#9b59b6', '#1abc9c'],
     difficulty: 'easy',
     solution: [
-      ['red', 'blue', 'blue', 'blue', 'blue'],
-      ['blue', 'red', 'blue', 'blue', 'blue'],
-      ['blue', 'blue', 'red', 'blue', 'blue'],
-      ['blue', 'blue', 'blue', 'red', 'blue'],
-      ['blue', 'blue', 'blue', 'blue', 'red']
+      ['#9b59b6', '#1abc9c', '#1abc9c', '#1abc9c', '#1abc9c'],
+      ['#1abc9c', '#9b59b6', '#1abc9c', '#1abc9c', '#1abc9c'],
+      ['#1abc9c', '#1abc9c', '#9b59b6', '#1abc9c', '#1abc9c'],
+      ['#1abc9c', '#1abc9c', '#1abc9c', '#9b59b6', '#1abc9c'],
+      ['#1abc9c', '#1abc9c', '#1abc9c', '#1abc9c', '#9b59b6']
     ],
     rowHints: [
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 4 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 3 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 3 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 4 }, { color: 'red', count: 1 }]
+      [{ color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 4 }],
+      [{ color: '#1abc9c', count: 1 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 3 }],
+      [{ color: '#1abc9c', count: 2 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 2 }],
+      [{ color: '#1abc9c', count: 3 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 1 }],
+      [{ color: '#1abc9c', count: 4 }, { color: '#9b59b6', count: 1 }]
     ],
     columnHints: [
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 4 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 3 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 3 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 4 }, { color: 'red', count: 1 }]
+      [{ color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 4 }],
+      [{ color: '#1abc9c', count: 1 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 3 }],
+      [{ color: '#1abc9c', count: 2 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 2 }],
+      [{ color: '#1abc9c', count: 3 }, { color: '#9b59b6', count: 1 }, { color: '#1abc9c', count: 1 }],
+      [{ color: '#1abc9c', count: 4 }, { color: '#9b59b6', count: 1 }]
     ]
   },
   {
     id: 5,
     name: '關卡 5 - 棋盤格',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#16a085', '#2980b9'],
     difficulty: 'medium',
     solution: [
-      ['red', 'blue', 'red', 'blue', 'red'],
-      ['blue', 'red', 'blue', 'red', 'blue'],
-      ['red', 'blue', 'red', 'blue', 'red'],
-      ['blue', 'red', 'blue', 'red', 'blue'],
-      ['red', 'blue', 'red', 'blue', 'red']
+      ['#16a085', '#2980b9', '#16a085', '#2980b9', '#16a085'],
+      ['#2980b9', '#16a085', '#2980b9', '#16a085', '#2980b9'],
+      ['#16a085', '#2980b9', '#16a085', '#2980b9', '#16a085'],
+      ['#2980b9', '#16a085', '#2980b9', '#16a085', '#2980b9'],
+      ['#16a085', '#2980b9', '#16a085', '#2980b9', '#16a085']
     ],
     rowHints: [
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }]
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }],
+      [{ color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }],
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }],
+      [{ color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }],
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }]
     ],
     columnHints: [
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }]
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }],
+      [{ color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }],
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }],
+      [{ color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }],
+      [{ color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }, { color: '#2980b9', count: 1 }, { color: '#16a085', count: 1 }]
     ]
   },
   {
     id: 6,
     name: '關卡 6 - 心形',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#e84393', '#2d3436'],
     difficulty: 'medium',
     solution: [
-      ['blue', 'red', 'blue', 'red', 'blue'],
-      ['red', 'red', 'red', 'red', 'red'],
-      ['red', 'red', 'red', 'red', 'red'],
-      ['blue', 'red', 'red', 'red', 'blue'],
-      ['blue', 'blue', 'red', 'blue', 'blue']
+      ['#2d3436', '#e84393', '#2d3436', '#e84393', '#2d3436'],
+      ['#e84393', '#e84393', '#e84393', '#e84393', '#e84393'],
+      ['#e84393', '#e84393', '#e84393', '#e84393', '#e84393'],
+      ['#2d3436', '#e84393', '#e84393', '#e84393', '#2d3436'],
+      ['#2d3436', '#2d3436', '#e84393', '#2d3436', '#2d3436']
     ],
     rowHints: [
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 5 }],
-      [{ color: 'red', count: 5 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }]
+      [{ color: '#2d3436', count: 1 }, { color: '#e84393', count: 1 }, { color: '#2d3436', count: 1 }, { color: '#e84393', count: 1 }, { color: '#2d3436', count: 1 }],
+      [{ color: '#e84393', count: 5 }],
+      [{ color: '#e84393', count: 5 }],
+      [{ color: '#2d3436', count: 1 }, { color: '#e84393', count: 3 }, { color: '#2d3436', count: 1 }],
+      [{ color: '#2d3436', count: 2 }, { color: '#e84393', count: 1 }, { color: '#2d3436', count: 2 }]
     ],
     columnHints: [
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 2 }, { color: 'blue', count: 2 }],
-      [{ color: 'red', count: 4 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 4 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 2 }, { color: 'blue', count: 2 }]
+      [{ color: '#2d3436', count: 1 }, { color: '#e84393', count: 2 }, { color: '#2d3436', count: 2 }],
+      [{ color: '#e84393', count: 4 }, { color: '#2d3436', count: 1 }],
+      [{ color: '#2d3436', count: 1 }, { color: '#e84393', count: 3 }, { color: '#2d3436', count: 1 }],
+      [{ color: '#e84393', count: 4 }, { color: '#2d3436', count: 1 }],
+      [{ color: '#2d3436', count: 1 }, { color: '#e84393', count: 2 }, { color: '#2d3436', count: 2 }]
     ]
   },
   {
     id: 7,
     name: '關卡 7 - 箭頭',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#d35400', '#74b9ff'],
     difficulty: 'medium',
     solution: [
-      ['blue', 'blue', 'red', 'blue', 'blue'],
-      ['blue', 'red', 'red', 'red', 'blue'],
-      ['red', 'red', 'red', 'red', 'red'],
-      ['blue', 'red', 'red', 'red', 'blue'],
-      ['blue', 'blue', 'red', 'blue', 'blue']
+      ['#74b9ff', '#74b9ff', '#d35400', '#74b9ff', '#74b9ff'],
+      ['#74b9ff', '#d35400', '#d35400', '#d35400', '#74b9ff'],
+      ['#d35400', '#d35400', '#d35400', '#d35400', '#d35400'],
+      ['#74b9ff', '#d35400', '#d35400', '#d35400', '#74b9ff'],
+      ['#74b9ff', '#74b9ff', '#d35400', '#74b9ff', '#74b9ff']
     ],
     rowHints: [
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 5 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }]
+      [{ color: '#74b9ff', count: 2 }, { color: '#d35400', count: 1 }, { color: '#74b9ff', count: 2 }],
+      [{ color: '#74b9ff', count: 1 }, { color: '#d35400', count: 3 }, { color: '#74b9ff', count: 1 }],
+      [{ color: '#d35400', count: 5 }],
+      [{ color: '#74b9ff', count: 1 }, { color: '#d35400', count: 3 }, { color: '#74b9ff', count: 1 }],
+      [{ color: '#74b9ff', count: 2 }, { color: '#d35400', count: 1 }, { color: '#74b9ff', count: 2 }]
     ],
     columnHints: [
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 5 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }]
+      [{ color: '#74b9ff', count: 2 }, { color: '#d35400', count: 1 }, { color: '#74b9ff', count: 2 }],
+      [{ color: '#74b9ff', count: 1 }, { color: '#d35400', count: 3 }, { color: '#74b9ff', count: 1 }],
+      [{ color: '#d35400', count: 5 }],
+      [{ color: '#74b9ff', count: 1 }, { color: '#d35400', count: 3 }, { color: '#74b9ff', count: 1 }],
+      [{ color: '#74b9ff', count: 2 }, { color: '#d35400', count: 1 }, { color: '#74b9ff', count: 2 }]
     ]
   },
   {
     id: 8,
     name: '關卡 8 - 邊框',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#e17055', '#6c5ce7'],
     difficulty: 'easy',
     solution: [
-      ['red', 'red', 'red', 'red', 'red'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['red', 'red', 'red', 'red', 'red']
+      ['#e17055', '#e17055', '#e17055', '#e17055', '#e17055'],
+      ['#e17055', '#6c5ce7', '#6c5ce7', '#6c5ce7', '#e17055'],
+      ['#e17055', '#6c5ce7', '#6c5ce7', '#6c5ce7', '#e17055'],
+      ['#e17055', '#6c5ce7', '#6c5ce7', '#6c5ce7', '#e17055'],
+      ['#e17055', '#e17055', '#e17055', '#e17055', '#e17055']
     ],
     rowHints: [
-      [{ color: 'red', count: 5 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 5 }]
+      [{ color: '#e17055', count: 5 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 5 }]
     ],
     columnHints: [
-      [{ color: 'red', count: 5 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 5 }]
+      [{ color: '#e17055', count: 5 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 1 }, { color: '#6c5ce7', count: 3 }, { color: '#e17055', count: 1 }],
+      [{ color: '#e17055', count: 5 }]
     ]
   },
   {
     id: 9,
     name: '關卡 9 - 角落',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#ff7675', '#0984e3'],
     difficulty: 'medium',
     solution: [
-      ['red', 'red', 'blue', 'red', 'red'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['blue', 'blue', 'blue', 'blue', 'blue'],
-      ['red', 'blue', 'blue', 'blue', 'red'],
-      ['red', 'red', 'blue', 'red', 'red']
+      ['#ff7675', '#ff7675', '#0984e3', '#ff7675', '#ff7675'],
+      ['#ff7675', '#0984e3', '#0984e3', '#0984e3', '#ff7675'],
+      ['#0984e3', '#0984e3', '#0984e3', '#0984e3', '#0984e3'],
+      ['#ff7675', '#0984e3', '#0984e3', '#0984e3', '#ff7675'],
+      ['#ff7675', '#ff7675', '#0984e3', '#ff7675', '#ff7675']
     ],
     rowHints: [
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }]
+      [{ color: '#ff7675', count: 2 }, { color: '#0984e3', count: 1 }, { color: '#ff7675', count: 2 }],
+      [{ color: '#ff7675', count: 1 }, { color: '#0984e3', count: 3 }, { color: '#ff7675', count: 1 }],
+      [{ color: '#0984e3', count: 5 }],
+      [{ color: '#ff7675', count: 1 }, { color: '#0984e3', count: 3 }, { color: '#ff7675', count: 1 }],
+      [{ color: '#ff7675', count: 2 }, { color: '#0984e3', count: 1 }, { color: '#ff7675', count: 2 }]
     ],
     columnHints: [
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 5 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 3 }, { color: 'red', count: 1 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }]
+      [{ color: '#ff7675', count: 2 }, { color: '#0984e3', count: 1 }, { color: '#ff7675', count: 2 }],
+      [{ color: '#ff7675', count: 1 }, { color: '#0984e3', count: 3 }, { color: '#ff7675', count: 1 }],
+      [{ color: '#0984e3', count: 5 }],
+      [{ color: '#ff7675', count: 1 }, { color: '#0984e3', count: 3 }, { color: '#ff7675', count: 1 }],
+      [{ color: '#ff7675', count: 2 }, { color: '#0984e3', count: 1 }, { color: '#ff7675', count: 2 }]
     ]
   },
   {
     id: 10,
     name: '關卡 10 - 鑽石',
     size: 5,
-    colors: ['red', 'blue'],
+    colors: ['#ff6b6b', '#00cec9'],
     difficulty: 'hard',
     solution: [
-      ['blue', 'blue', 'red', 'blue', 'blue'],
-      ['blue', 'red', 'red', 'red', 'blue'],
-      ['red', 'red', 'blue', 'red', 'red'],
-      ['blue', 'red', 'red', 'red', 'blue'],
-      ['blue', 'blue', 'red', 'blue', 'blue']
+      ['#00cec9', '#00cec9', '#ff6b6b', '#00cec9', '#00cec9'],
+      ['#00cec9', '#ff6b6b', '#ff6b6b', '#ff6b6b', '#00cec9'],
+      ['#ff6b6b', '#ff6b6b', '#00cec9', '#ff6b6b', '#ff6b6b'],
+      ['#00cec9', '#ff6b6b', '#ff6b6b', '#ff6b6b', '#00cec9'],
+      ['#00cec9', '#00cec9', '#ff6b6b', '#00cec9', '#00cec9']
     ],
     rowHints: [
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 2 }, { color: 'blue', count: 1 }, { color: 'red', count: 2 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }]
+      [{ color: '#00cec9', count: 2 }, { color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 2 }],
+      [{ color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 3 }, { color: '#00cec9', count: 1 }],
+      [{ color: '#ff6b6b', count: 2 }, { color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 2 }],
+      [{ color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 3 }, { color: '#00cec9', count: 1 }],
+      [{ color: '#00cec9', count: 2 }, { color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 2 }]
     ],
     columnHints: [
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }, { color: 'blue', count: 1 }, { color: 'red', count: 1 }],
-      [{ color: 'blue', count: 1 }, { color: 'red', count: 3 }, { color: 'blue', count: 1 }],
-      [{ color: 'blue', count: 2 }, { color: 'red', count: 1 }, { color: 'blue', count: 2 }]
+      [{ color: '#00cec9', count: 2 }, { color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 2 }],
+      [{ color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 3 }, { color: '#00cec9', count: 1 }],
+      [{ color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 1 }],
+      [{ color: '#00cec9', count: 1 }, { color: '#ff6b6b', count: 3 }, { color: '#00cec9', count: 1 }],
+      [{ color: '#00cec9', count: 2 }, { color: '#ff6b6b', count: 1 }, { color: '#00cec9', count: 2 }]
     ]
   }
 ];
