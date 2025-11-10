@@ -24,26 +24,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
           <button type="button" class="btn btn--primary" (click)="handleStartClick()">
             開始遊戲
           </button>
-          <button type="button" class="btn btn--ghost" (click)="toggleCredits(true)">
-            製作團隊
-          </button>
         </div>
       </div>
 
       <div class="landing__footer">
         <span class="footer__label">版本</span>
         <span class="footer__value">v0.1.0</span>
-      </div>
-
-      <div class="credits-backdrop" *ngIf="showCredits" (click)="toggleCredits(false)">
-        <div class="credits" (click)="$event.stopPropagation()">
-          <h2>ColorDance 製作團隊</h2>
-          <p>設計＆開發：你與我</p>
-          <p>靈感來源：ColorDance 互動拼色</p>
-          <button type="button" class="btn btn--ghost" (click)="toggleCredits(false)">
-            關閉
-          </button>
-        </div>
       </div>
     </div>
   `,
@@ -79,12 +65,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
     .landing__drip {
       position: absolute;
-      top: -120px;
-      left: 50%;
-      width: 120%;
-      max-width: 960px;
-      transform: translateX(-50%) rotate(-3deg);
-      opacity: 0.8;
+      top: -40px;
+      right: 56%;
+      width: min(68vw, 520px);
+      transform: rotate(-12deg);
+      opacity: 0.9;
+      z-index: 5;
       animation: drip-float 6s ease-in-out infinite alternate;
       pointer-events: none;
     }
@@ -109,7 +95,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
     }
 
     .landing__logo {
-      width: min(240px, 60vw);
+      width: min(280px, 65vw);
       height: auto;
       filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.18));
       animation: logo-pop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -186,18 +172,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       box-shadow: 0 18px 32px rgba(255, 154, 162, 0.45);
     }
 
-    .btn--ghost {
-      background: rgba(255, 255, 255, 0.75);
-      color: #364565;
-      box-shadow: 0 10px 20px rgba(31, 42, 68, 0.1);
-    }
-
-    .btn--ghost:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 12px 24px rgba(31, 42, 68, 0.12);
-    }
-
     .landing__footer {
       position: absolute;
       bottom: 24px;
@@ -225,44 +199,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       color: #2f3a54;
     }
 
-    .credits-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(22, 32, 54, 0.65);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      animation: backdrop-fade 0.25s ease;
-    }
-
-    .credits {
-      background: #ffffff;
-      padding: 32px 36px;
-      border-radius: 28px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-      text-align: center;
-      color: #1f2a44;
-      max-width: 320px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      font-family: 'Baloo 2', 'Segoe UI', sans-serif;
-      animation: credits-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .credits h2 {
-      margin: 0 0 4px;
-      font-size: 1.6rem;
-      color: #2f3a54;
-    }
-
-    .credits p {
-      margin: 0;
-      font-size: 1.05rem;
-      color: #44516f;
-    }
-
     @keyframes landing-fade-in {
       from {
         opacity: 0;
@@ -276,10 +212,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
     @keyframes drip-float {
       from {
-        transform: translateX(-50%) rotate(-4deg) translateY(0);
+        transform: rotate(-14deg) translateY(0);
       }
       to {
-        transform: translateX(-50%) rotate(-2deg) translateY(12px);
+        transform: rotate(-10deg) translateY(10px);
       }
     }
 
@@ -296,27 +232,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         transform: scale(1);
       }
     }
-
-    @keyframes backdrop-fade {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes credits-pop {
-      0% {
-        transform: scale(0.75);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
     @media (max-width: 768px) {
       .landing {
         padding: 32px 20px 24px;
@@ -352,14 +267,8 @@ export class LandingScreenComponent {
   @Input() isLeaving = false;
   @Output() startGame = new EventEmitter<void>();
 
-  showCredits = false;
-
   handleStartClick(): void {
     this.startGame.emit();
-  }
-
-  toggleCredits(open: boolean): void {
-    this.showCredits = open;
   }
 }
 
