@@ -3,47 +3,57 @@ import { CommonModule } from '@angular/common';
 import { LevelSelectorComponent } from './components/level-selector/level-selector.component';
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { Level } from './models/level.model';
+import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, LevelSelectorComponent, GameBoardComponent],
+  imports: [CommonModule, LandingScreenComponent, LevelSelectorComponent, GameBoardComponent],
   template: `
-    <div class="app-container">
-      <header class="app-header">
-        <h1>🎨 網格填色遊戲</h1>
-        <p class="subtitle">參考圖案，複製填色</p>
-      </header>
+    <ng-container *ngIf="showLanding; else gameShell">
+      <app-landing-screen
+        [isLeaving]="isLandingLeaving"
+        (startGame)="handleStartGame()"
+      ></app-landing-screen>
+    </ng-container>
 
-      <!-- 關卡選擇介面 -->
-      <div class="content" *ngIf="!selectedLevel">
-        <app-level-selector (levelSelected)="onLevelSelected($event)"></app-level-selector>
-      </div>
+    <ng-template #gameShell>
+      <div class="app-container">
+        <header class="app-header">
+          <h1>🎨 網格填色遊戲</h1>
+          <p class="subtitle">參考圖案，複製填色</p>
+        </header>
 
-      <!-- 遊戲面板 -->
-      <div class="content" *ngIf="selectedLevel">
-        <app-game-board [level]="selectedLevel"></app-game-board>
-        
-        <div class="back-button-container">
-          <button class="btn-back" (click)="backToLevelSelect()">
-            ← 返回關卡選擇
-          </button>
+        <!-- 關卡選擇介面 -->
+        <div class="content" *ngIf="!selectedLevel">
+          <app-level-selector (levelSelected)="onLevelSelected($event)"></app-level-selector>
+        </div>
+
+        <!-- 遊戲面板 -->
+        <div class="content" *ngIf="selectedLevel">
+          <app-game-board [level]="selectedLevel"></app-game-board>
+          
+          <div class="back-button-container">
+            <button class="btn-back" (click)="backToLevelSelect()">
+              ← 返回關卡選擇
+            </button>
+          </div>
+        </div>
+
+        <!-- 遊戲說明 -->
+        <div class="instructions" *ngIf="!selectedLevel">
+          <h3>遊戲規則</h3>
+          <ul>
+            <li>🎨 參考左側的圖案，在右側網格中填色複製</li>
+            <li>🖌️ 先點擊上方的顏色塊選擇畫筆顏色</li>
+            <li>🖱️ 然後點擊網格方塊進行填色</li>
+            <li>✕ 點擊橡皮擦可以清除顏色</li>
+            <li>✅ 填滿所有方塊後點擊「檢查答案」查看結果</li>
+            <li>💡 遇到困難可以使用「提示」功能自動填充一格</li>
+          </ul>
         </div>
       </div>
-
-      <!-- 遊戲說明 -->
-      <div class="instructions" *ngIf="!selectedLevel">
-        <h3>遊戲規則</h3>
-        <ul>
-          <li>🎨 參考左側的圖案，在右側網格中填色複製</li>
-          <li>🖌️ 先點擊上方的顏色塊選擇畫筆顏色</li>
-          <li>🖱️ 然後點擊網格方塊進行填色</li>
-          <li>✕ 點擊橡皮擦可以清除顏色</li>
-          <li>✅ 填滿所有方塊後點擊「檢查答案」查看結果</li>
-          <li>💡 遇到困難可以使用「提示」功能自動填充一格</li>
-        </ul>
-      </div>
-    </div>
+    </ng-template>
   `,
   styles: [`
     .app-container {
@@ -147,12 +157,30 @@ import { Level } from './models/level.model';
 export class AppComponent {
   title = '網格填色遊戲';
   selectedLevel: Level | null = null;
+  showLanding = true;
+  isLandingLeaving = false;
 
   /**
    * 處理關卡選擇
    */
   onLevelSelected(level: Level): void {
     this.selectedLevel = level;
+  }
+
+  /**
+   * 入口頁開始遊戲
+   */
+  handleStartGame(): void {
+    if (this.isLandingLeaving) {
+      return;
+    }
+
+    this.isLandingLeaving = true;
+
+    setTimeout(() => {
+      this.showLanding = false;
+      this.isLandingLeaving = false;
+    }, 600);
   }
 
   /**

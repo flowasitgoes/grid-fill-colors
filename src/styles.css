@@ -16,17 +16,15 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fb;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  color: #1f2a44;
+  padding: 48px 16px;
 }
 
 app-root {
-  width: 100%;
-  max-width: 800px;
+  display: block;
+  min-height: 100vh;
 }
 
