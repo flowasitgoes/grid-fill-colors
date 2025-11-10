@@ -61,7 +61,7 @@ export class GameService {
    * 循环切换颜色：空白 → 颜色1 → 颜色2 → ... → 空白
    */
   fillCell(row: number, col: number): void {
-    if (!this.currentLevel || this.gameCompleted.value) {
+    if (!this.currentLevel) {
       return;
     }
 
@@ -84,22 +84,22 @@ export class GameService {
       }
     }
 
-    // 每次填色后检查是否完成
-    this.checkCompletion();
+    // 每次填色後更新完成狀態
+    this.updateCompletionState();
   }
 
   /**
    * 用指定颜色填充单元格（画笔模式）
    */
   fillCellWithColor(row: number, col: number, color: string): void {
-    if (!this.currentLevel || this.gameCompleted.value) {
+    if (!this.currentLevel) {
       return;
     }
 
     if (row >= 0 && row < 5 && col >= 0 && col < 5) {
       this.gameGrid[row][col] = color;
-      // 每次填色后检查是否完成
-      this.checkCompletion();
+      // 每次填色後更新完成狀態
+      this.updateCompletionState();
     }
   }
 
@@ -109,6 +109,7 @@ export class GameService {
   clearCell(row: number, col: number): void {
     if (row >= 0 && row < 5 && col >= 0 && col < 5) {
       this.gameGrid[row][col] = '';
+      this.updateCompletionState();
     }
   }
 
@@ -146,17 +147,25 @@ export class GameService {
    * 检查游戏是否完成
    * 如果所有格子都填满且正确，则游戏完成
    */
-  private checkCompletion(): void {
-    // 检查是否所有格子都已填充
-    const allFilled = this.gameGrid.every(row => 
+  private updateCompletionState(): void {
+    // 檢查是否所有格子都已填滿
+    const allFilled = this.gameGrid.every(row =>
       row.every(cell => cell !== '')
     );
 
-    if (allFilled) {
-      const isCorrect = this.validateGrid();
-      this.gameCompleted.next(true);
-      this.gameWon.next(isCorrect);
+    if (!allFilled) {
+      if (this.gameCompleted.value) {
+        this.gameCompleted.next(false);
+      }
+      if (this.gameWon.value) {
+        this.gameWon.next(false);
+      }
+      return;
     }
+
+    const isCorrect = this.validateGrid();
+    this.gameCompleted.next(true);
+    this.gameWon.next(isCorrect);
   }
 
   /**

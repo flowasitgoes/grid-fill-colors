@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { SfxEvent } from '../models/sfx-event';
+import { SFX_CONFIG, SfxConfigEntry } from '../data/sfx-config';
 
 /**
  * 回饋服務：集中管理音效播放
@@ -8,6 +10,14 @@ import { Injectable } from '@angular/core';
 })
 export class FeedbackService {
   private audioContext?: AudioContext;
+  private masterGain?: GainNode;
+  private groupGains: Map<string, GainNode> = new Map();
+  private bufferCache: Map<string, AudioBuffer> = new Map();
+  private bufferPromises: Map<string, Promise<AudioBuffer | null>> = new Map();
+
+  private activeLoops: Map<SfxEvent, { source: AudioBufferSourceNode; gain: GainNode }> =
+    new Map();
+
   private colorSpectra: Record<string, { base: number; harmonic: number[] }> = {
     red: { base: 340, harmonic: [510, 680, 1020] },
     blue: { base: 240, harmonic: [360, 480, 720] },
@@ -24,11 +34,120 @@ export class FeedbackService {
   }
 
   /**
+   * 播放指定事件對應的音效
+   */
+  playEvent(event: SfxEvent, options?: { playbackRate?: number; volume?: number }): void {
+    const config = SFX_CONFIG[event];
+    if (!config) {
+      return;
+    }
+
+    const context = this.getContext();
+    if (!context) {
+      return;
+    }
+
+    if (context.state === 'suspended') {
+      context.resume().catch(() => undefined);
+    }
+
+    const filePath = this.pickFile(config);
+    this.loadBuffer(filePath).then(buffer => {
+      if (!buffer) {
+        return;
+      }
+
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+
+      const playbackRate = this.resolvePlaybackRate(config, options);
+      source.playbackRate.value = playbackRate;
+
+      const { gain, master } = this.getGainNodes(context, config);
+      const individualGain = context.createGain();
+      individualGain.gain.value = options?.volume ?? config.volume ?? 1;
+
+      source.connect(individualGain);
+      individualGain.connect(gain);
+      gain.connect(master);
+      master.connect(context.destination);
+
+      source.start(0);
+    }).catch(() => undefined);
+  }
+
+  /**
+   * 啟動持續播放的環境音效
+   */
+  playLoop(event: SfxEvent): void {
+    const config = SFX_CONFIG[event];
+    if (!config) {
+      return;
+    }
+
+    const context = this.getContext();
+    if (!context) {
+      return;
+    }
+
+    if (this.activeLoops.has(event)) {
+      return;
+    }
+
+    if (context.state === 'suspended') {
+      context.resume().catch(() => undefined);
+    }
+
+    const filePath = this.pickFile(config);
+    this.loadBuffer(filePath).then(buffer => {
+      if (!buffer || this.activeLoops.has(event)) {
+        return;
+      }
+
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.playbackRate.value = this.resolvePlaybackRate(config);
+
+      const { gain, master } = this.getGainNodes(context, config);
+      const loopGain = context.createGain();
+      loopGain.gain.value = config.volume ?? 1;
+
+      source.connect(loopGain);
+      loopGain.connect(gain);
+      gain.connect(master);
+      master.connect(context.destination);
+
+      source.start(0);
+      this.activeLoops.set(event, { source, gain: loopGain });
+    }).catch(() => undefined);
+  }
+
+  /**
+   * 停止持續播放的環境音效
+   */
+  stopLoop(event: SfxEvent): void {
+    const loop = this.activeLoops.get(event);
+    if (!loop) {
+      return;
+    }
+
+    try {
+      loop.source.stop();
+      loop.source.disconnect();
+    } catch {
+      // 忽略停止失敗
+    }
+
+    loop.gain.disconnect();
+    this.activeLoops.delete(event);
+  }
+
+  /**
    * 播放橡皮擦音效
    */
   playCellErase(): void {
-    this.playPop(150, 0.14, -0.35);
-    this.playSparkle(180, 0.22, 0.18);
+    this.playEvent(SfxEvent.GameEraser);
   }
 
   /**
@@ -44,10 +163,10 @@ export class FeedbackService {
    */
   playCheckAnswer(success: boolean): void {
     if (success) {
-      this.playChord([600, 720, 880], 0.45);
-      this.playCrowdWave(0.6);
+      this.playEvent(SfxEvent.GameCheckSuccessLayers);
+      this.playEvent(SfxEvent.GameCheckSuccessCrowd);
     } else {
-      this.playPop(140, 0.2, 0.4);
+      this.playEvent(SfxEvent.GameCheckFailure);
     }
   }
 
@@ -55,10 +174,7 @@ export class FeedbackService {
    * 播放填色升級音效（依顏色調整音高）
    */
   playColorFill(color: string): void {
-    const palette = this.colorSpectra[color] ?? this.colorSpectra['red'];
-    const frequencies = [palette.base, ...palette.harmonic];
-    this.playArpeggio(frequencies, 0.55);
-    this.playSparkle(palette.base * 1.4, 0.26, 0.35);
+    this.playEvent(SfxEvent.GameFillBasic);
   }
 
   private getContext(): AudioContext | undefined {
@@ -79,6 +195,94 @@ export class FeedbackService {
 
     this.audioContext = new Ctor();
     return this.audioContext;
+  }
+
+  private getMasterGain(context: AudioContext): GainNode {
+    if (!this.masterGain) {
+      this.masterGain = context.createGain();
+      this.masterGain.gain.value = 0.9;
+    }
+    return this.masterGain;
+  }
+
+  private getGroupGain(context: AudioContext, group: string): GainNode {
+    const existing = this.groupGains.get(group);
+    if (existing) {
+      return existing;
+    }
+
+    const gain = context.createGain();
+    const defaultValue = group === 'ui' ? 0.8 : group === 'env' ? 0.5 : 1;
+    gain.gain.value = defaultValue;
+    this.groupGains.set(group, gain);
+    return gain;
+  }
+
+  private getGainNodes(context: AudioContext, config: SfxConfigEntry): {
+    gain: GainNode;
+    master: GainNode;
+  } {
+    const master = this.getMasterGain(context);
+    const groupGain = this.getGroupGain(context, config.group);
+    return { gain: groupGain, master };
+  }
+
+  private resolvePlaybackRate(config: SfxConfigEntry, options?: { playbackRate?: number }): number {
+    if (options?.playbackRate) {
+      return options.playbackRate;
+    }
+
+    if (!config.playbackRate) {
+      return 1;
+    }
+
+    const { min, max } = config.playbackRate;
+    if (min === max) {
+      return min;
+    }
+
+    return min + Math.random() * (max - min);
+  }
+
+  private pickFile(config: SfxConfigEntry): string {
+    if (config.files.length === 1) {
+      return config.files[0];
+    }
+
+    const index = Math.floor(Math.random() * config.files.length);
+    return config.files[index];
+  }
+
+  private loadBuffer(path: string): Promise<AudioBuffer | null> {
+    if (this.bufferCache.has(path)) {
+      return Promise.resolve(this.bufferCache.get(path)!);
+    }
+
+    const existingPromise = this.bufferPromises.get(path);
+    if (existingPromise) {
+      return existingPromise;
+    }
+
+    const context = this.getContext();
+    if (!context) {
+      return Promise.resolve(null);
+    }
+
+    const promise = fetch(path)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+      .then(buffer => {
+        this.bufferCache.set(path, buffer);
+        this.bufferPromises.delete(path);
+        return buffer;
+      })
+      .catch(() => {
+        this.bufferPromises.delete(path);
+        return null;
+      });
+
+    this.bufferPromises.set(path, promise);
+    return promise;
   }
 
   private playPop(frequency: number, duration: number, detune: number = 0.0): void {
@@ -229,43 +433,6 @@ export class FeedbackService {
       gain.connect(context.destination);
       source.start(now);
     }).catch(() => undefined);
-  }
-
-  private playChord(frequencies: number[], duration: number): void {
-    const context = this.getContext();
-    if (!context) {
-      return;
-    }
-
-    if (context.state === 'suspended') {
-      context.resume().catch(() => undefined);
-    }
-
-    const now = context.currentTime;
-    const gain = context.createGain();
-    gain.gain.value = 0.0;
-    gain.connect(context.destination);
-
-    frequencies.forEach((freq, index) => {
-      const oscillator = context.createOscillator();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = freq;
-
-      const oscillatorGain = context.createGain();
-      oscillatorGain.gain.setValueAtTime(0, now);
-      oscillatorGain.gain.linearRampToValueAtTime(0.25 / frequencies.length, now + 0.02 + index * 0.01);
-      oscillatorGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      oscillator.connect(oscillatorGain);
-      oscillatorGain.connect(gain);
-
-      oscillator.start(now);
-      oscillator.stop(now + duration + 0.05);
-    });
-
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.4, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.1);
   }
 }
 

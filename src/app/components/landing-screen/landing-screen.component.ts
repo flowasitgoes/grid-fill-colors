@@ -9,6 +9,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { FeedbackService } from '../../services/feedback.service';
+import { SfxEvent } from '../../models/sfx-event';
 
 @Component({
   selector: 'app-landing-screen',
@@ -514,6 +516,8 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
   @Output() startGame = new EventEmitter<void>();
   @ViewChild('bgm') bgmRef?: ElementRef<HTMLAudioElement>;
 
+  constructor(private feedbackService: FeedbackService) {}
+
   private resumePlaybackHandler?: () => void;
   private fadeIntervalId: number | null = null;
   private loadingTimeoutId: number | null = null;
@@ -547,6 +551,8 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
       window.clearTimeout(this.loadingTimeoutId);
       this.loadingTimeoutId = null;
     }
+
+    this.feedbackService.stopLoop(SfxEvent.EnvLoadingBubbles);
   }
 
   handleStartClick(): void {
@@ -554,8 +560,10 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    this.feedbackService.playEvent(SfxEvent.UiClick);
     this.isLoadingSequence = true;
     this.startLoadingAudio();
+    this.feedbackService.playLoop(SfxEvent.EnvLoadingBubbles);
 
     this.loadingTimeoutId = window.setTimeout(() => {
       this.loadingTimeoutId = null;
@@ -627,6 +635,7 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
   private completeStartSequence(): void {
     this.fadeOutAudio(() => {
       this.isLoadingSequence = false;
+      this.feedbackService.stopLoop(SfxEvent.EnvLoadingBubbles);
       this.startGame.emit();
     });
   }

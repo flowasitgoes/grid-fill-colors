@@ -4,6 +4,7 @@ import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GameService } from '../../services/game.service';
 import { Level } from '../../models/level.model';
 import { FeedbackService } from '../../services/feedback.service';
+import { SfxEvent } from '../../models/sfx-event';
 
 /**
  * 遊戲面板元件
@@ -592,6 +593,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     if (this.level) {
       this.currentLevel = this.level;
       this.gameService.initGame(this.level);
+      this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
       
       // 默认选择第一个颜色
       if (this.level.colors && this.level.colors.length > 0) {
@@ -614,6 +616,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       clearTimeout(this.checkPulseTimeout);
       this.checkPulseTimeout = null;
     }
+    this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
   }
 
   /**
@@ -622,6 +625,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   selectColor(color: string): void {
     this.selectedColor = color;
     this.feedbackService.playColorSwitch(color || 'empty');
+    this.feedbackService.playEvent(SfxEvent.UiClick);
   }
 
   /**
@@ -655,28 +659,34 @@ export class GameBoardComponent implements OnInit, OnDestroy {
    * 檢查答案
    */
   onCheckAnswer(): void {
+    this.feedbackService.playEvent(SfxEvent.UiClick);
     const result = this.gameService.checkAnswer();
 
     if (!result.completed) {
       this.triggerCheckPulse('incomplete');
-      this.feedbackService.playCheckAnswer(false);
+      this.feedbackService.playEvent(SfxEvent.GameCheckIncomplete);
       alert('請先填滿所有格子！');
       return;
     }
 
     this.triggerCheckPulse(result.correct ? 'success' : 'failure');
     this.feedbackService.playCheckAnswer(result.correct);
+    if (result.correct) {
+      this.feedbackService.playEvent(SfxEvent.GameFinishFireworks);
+    }
   }
 
   /**
    * 重置游戏
    */
   onReset(): void {
+    this.feedbackService.playEvent(SfxEvent.UiClick);
     if (confirm('確定要重置遊戲嗎？')) {
       this.gameService.resetGame();
       this.gameCompleted = false;
       this.gameWon = false;
       this.triggerCheckPulse(null);
+      this.feedbackService.playEvent(SfxEvent.UiPopupClose);
     }
   }
 
@@ -684,9 +694,11 @@ export class GameBoardComponent implements OnInit, OnDestroy {
    * 获取提示
    */
   onGetHint(): void {
+    this.feedbackService.playEvent(SfxEvent.UiClick);
     const hint = this.gameService.getHint();
     if (hint) {
       // 提示已自動填充，無需額外操作
+      this.feedbackService.playEvent(SfxEvent.GameHintSuccess);
     } else {
       alert('恭喜！所有格子都正確了！');
     }

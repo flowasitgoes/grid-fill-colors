@@ -86,7 +86,7 @@ import { LandingScreenComponent } from './components/landing-screen/landing-scre
       margin-bottom: 44px;
       padding-bottom: 24px;
       border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-      color: rgba(240, 252, 255, 0.92);
+      color: rgba(248, 242, 255, 1);
       text-shadow: 0 0 22px rgba(18, 40, 110, 0.5);
     }
 

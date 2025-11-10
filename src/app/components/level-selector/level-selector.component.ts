@@ -2,6 +2,8 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, 
 import { CommonModule } from '@angular/common';
 import { LevelService } from '../../services/level.service';
 import { Level } from '../../models/level.model';
+import { FeedbackService } from '../../services/feedback.service';
+import { SfxEvent } from '../../models/sfx-event';
 
 /**
  * 關卡選擇器元件
@@ -34,7 +36,7 @@ import { Level } from '../../models/level.model';
 
       <div class="stage-content">
         <header class="stage-header">
-          <h2>星際演唱會 · 關卡選擇</h2>
+          <h2>星際音色會 · 關卡選擇</h2>
           <p class="stage-subtitle">
             霓虹節奏穿梭星雲，挑戰由你點亮。
           </p>
@@ -436,7 +438,10 @@ export class LevelSelectorComponent implements OnInit, AfterViewInit, OnDestroy 
   private resumePlaybackHandler?: () => void;
   private readonly baseVolume = 0.5;
 
-  constructor(private levelService: LevelService) {}
+  constructor(
+    private levelService: LevelService,
+    private feedbackService: FeedbackService
+  ) {}
 
   ngOnInit(): void {
     this.levels = this.levelService.getAllLevels();
@@ -461,6 +466,7 @@ export class LevelSelectorComponent implements OnInit, AfterViewInit, OnDestroy 
    * 處理關卡選擇
    */
   onLevelSelect(level: Level): void {
+    this.feedbackService.playEvent(SfxEvent.UiChooseAndClick);
     this.stopBackgroundAudio();
     this.levelSelected.emit(level);
   }
