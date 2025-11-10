@@ -3,6 +3,7 @@ export enum SfxEvent {
   UiPopupOpen = 'ui.popup.open',
   UiPopupClose = 'ui.popup.close',
   UiChooseAndClick = 'ui.choose.click',
+  UiHover = 'ui.hover',
   UiAlertIncomplete = 'ui.alert.incomplete',
 
   GameFillBasic = 'game.fill.basic',

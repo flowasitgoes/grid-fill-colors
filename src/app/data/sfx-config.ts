@@ -30,6 +30,11 @@ export const SFX_CONFIG: Record<SfxEvent, SfxConfigEntry> = {
     files: ['assets/audio/ui/ui_choose_and_click.mp3'],
     group: 'ui',
   },
+  [SfxEvent.UiHover]: {
+    files: ['assets/audio/ui/ui_cursor_hoversound.mp3'],
+    group: 'ui',
+    volume: 1.2,
+  },
   [SfxEvent.UiAlertIncomplete]: {
     files: ['assets/audio/ui/ui_alert_incomplete.mp3'],
     group: 'ui',
@@ -38,11 +43,13 @@ export const SFX_CONFIG: Record<SfxEvent, SfxConfigEntry> = {
   [SfxEvent.GameFillBasic]: {
     files: ['assets/audio/gameplay/fill_basic_01.mp3'],
     group: 'sfx',
+    volume: 1.15,
     playbackRate: { min: 0.96, max: 1.05 },
   },
   [SfxEvent.GameFillStreak]: {
     files: ['assets/audio/gameplay/fill_streak_01.mp3'],
     group: 'sfx',
+    volume: 1.1,
   },
   [SfxEvent.GameEraser]: {
     files: ['assets/audio/gameplay/eraser_swipe_01.mp3'],

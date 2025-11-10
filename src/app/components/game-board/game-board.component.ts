@@ -586,6 +586,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   selectedColor: string = '';  // 當前選中的畫筆顏色
   checkPulseState: 'success' | 'failure' | 'incomplete' | null = null;
   private checkPulseTimeout: ReturnType<typeof setTimeout> | null = null;
+  private victoryTriggeredByCheckButton = false;
 
   constructor(private gameService: GameService, private feedbackService: FeedbackService) {}
 
@@ -606,7 +607,17 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       });
 
       this.gameService.gameWon$.subscribe(won => {
+        const previousState = this.gameWon;
         this.gameWon = won;
+        if (won && !previousState) {
+          if (!this.victoryTriggeredByCheckButton) {
+            this.feedbackService.playCheckAnswer(true);
+            this.feedbackService.playEvent(SfxEvent.GameFinishFireworks);
+          }
+          this.victoryTriggeredByCheckButton = false;
+        } else if (!won) {
+          this.victoryTriggeredByCheckButton = false;
+        }
       });
     }
   }
@@ -670,9 +681,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     }
 
     this.triggerCheckPulse(result.correct ? 'success' : 'failure');
-    this.feedbackService.playCheckAnswer(result.correct);
     if (result.correct) {
+      this.victoryTriggeredByCheckButton = true;
+      this.feedbackService.playCheckAnswer(true);
       this.feedbackService.playEvent(SfxEvent.GameFinishFireworks);
+    } else {
+      this.feedbackService.playCheckAnswer(false);
     }
   }
 

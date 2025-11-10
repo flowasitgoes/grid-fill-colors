@@ -49,6 +49,7 @@ import { SfxEvent } from '../../models/sfx-event';
             [class.easy]="level.difficulty === 'easy'"
             [class.medium]="level.difficulty === 'medium'"
             [class.hard]="level.difficulty === 'hard'"
+            (mouseenter)="onLevelHover()"
             (click)="onLevelSelect(level)">
             <div class="level-card-inner">
               <div class="level-header">
@@ -465,6 +466,10 @@ export class LevelSelectorComponent implements OnInit, AfterViewInit, OnDestroy 
   /**
    * 處理關卡選擇
    */
+  onLevelHover(): void {
+    this.feedbackService.playEvent(SfxEvent.UiHover);
+  }
+
   onLevelSelect(level: Level): void {
     this.feedbackService.playEvent(SfxEvent.UiChooseAndClick);
     this.stopBackgroundAudio();
