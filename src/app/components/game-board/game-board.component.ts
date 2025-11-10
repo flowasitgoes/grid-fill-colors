@@ -92,15 +92,63 @@ import { Subscription } from 'rxjs';
 
       <!-- 控制按钮 -->
       <div class="game-controls">
+        <button
+          *ngIf="postVictoryControlsVisible"
+          type="button"
+          class="btn-hold btn-hold--primary victory-inline"
+          (click)="showSummaryNow()"
+        >
+          立即查看成績
+        </button>
         <button class="btn btn-primary" (click)="onCheckAnswer()">檢查答案</button>
         <button class="btn btn-secondary" (click)="onReset()">重置</button>
         <button class="btn btn-hint" (click)="onGetHint()">提示</button>
+        <button
+          *ngIf="postVictoryControlsVisible"
+          type="button"
+          class="btn btn--secondary victory-inline-next"
+          (click)="handleCompletionNext()"
+          [disabled]="!canGoNextLevel"
+          [attr.aria-disabled]="!canGoNextLevel"
+        >
+          前往下一關
+        </button>
       </div>
 
+        </div>
+
+    <div
+      class="victory-hold"
+      *ngIf="showVictoryHold && !showSummaryOverlay"
+      aria-live="polite"
+    >
+      <div class="victory-hold__card">
+        <div class="victory-hold__content">
+          <h3>🎉 恭喜完成挑戰！</h3>
+          <p>先在舞台上享受成果，準備好再點擊查看成績。</p>
+      </div>
+
+        <div class="victory-hold__actions">
+          <button
+            type="button"
+            class="btn-hold btn-hold--primary"
+            (click)="showSummaryNow()"
+          >
+            立即查看成績
+          </button>
+          <button
+            type="button"
+            class="btn-hold btn-hold--close"
+            (click)="showVictoryHold = false"
+          >
+            謝謝先不用
+          </button>
+    </div>
+      </div>
     </div>
 
     <app-completion-overlay
-      [visible]="gameSummary !== null"
+      [visible]="showSummaryOverlay"
       [summary]="gameSummary"
       [isVictory]="gameWon"
       [canGoNext]="canGoNextLevel"
@@ -350,6 +398,125 @@ import { Subscription } from 'rxjs';
       color: white;
     }
 
+    .btn--secondary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 10px 24px rgba(102, 126, 234, 0.25);
+    }
+
+    .btn--secondary[disabled],
+    .btn--secondary[aria-disabled='true'] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .game-controls .btn-hold {
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: linear-gradient(135deg, #ff9aa2 0%, #ffd97d 100%);
+      color: #2b1950;
+      box-shadow: 0 10px 24px rgba(255, 154, 162, 0.28);
+    }
+
+    .game-controls .btn-hold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(255, 154, 162, 0.38);
+    }
+
+    .victory-hold {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 950;
+      pointer-events: none;
+    }
+
+    .victory-hold__card {
+      pointer-events: auto;
+      background: rgba(12, 20, 48, 0.88);
+      border-radius: 20px;
+      padding: 24px 28px;
+      color: #f3f6ff;
+      box-shadow: 0 24px 60px rgba(4, 8, 28, 0.6);
+      border: 1px solid rgba(138, 169, 255, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: min(420px, 90vw);
+      text-align: center;
+      animation: holdFade 0.3s ease;
+    }
+
+    .victory-hold__content h3 {
+      margin: 0;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+
+    .victory-hold__content p {
+      margin: 0;
+      font-size: 1.05rem;
+      color: rgba(220, 232, 255, 0.85);
+    }
+
+    .victory-hold__actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hold {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-hold--primary {
+      background: linear-gradient(135deg, #ff9aa2 0%, #ffd97d 100%);
+      color: #2b1950;
+      box-shadow: 0 10px 24px rgba(255, 154, 162, 0.32);
+    }
+
+    .btn-hold--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(255, 154, 162, 0.42);
+    }
+
+    .btn-hold--close {
+      background: transparent;
+      color: rgba(235, 244, 255, 0.8);
+      border: 1px solid rgba(235, 244, 255, 0.35);
+      padding-inline: 16px;
+    }
+
+    .btn-hold--close:hover {
+      transform: translateY(-1px);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes holdFade {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .game-section.check-pulse-success {
       animation: pulseSuccess 650ms ease;
     }
@@ -551,7 +718,7 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   @Output() retryLevel = new EventEmitter<void>();
   @Output() nextLevel = new EventEmitter<void>();
   @Output() exitToMenu = new EventEmitter<void>();
-
+  
   currentLevel: Level | null = null;
   gameCompleted: boolean = false;
   gameWon: boolean = false;
@@ -559,6 +726,8 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   checkPulseState: 'success' | 'failure' | 'incomplete' | null = null;
   gameSummary: GameSummary | null = null;
   canGoNextLevel = false;
+  showSummaryOverlay = false;
+  showVictoryHold = false;
   private checkPulseTimeout: ReturnType<typeof setTimeout> | null = null;
   private victoryTriggeredByCheckButton = false;
   private subscriptions = new Subscription();
@@ -594,13 +763,18 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
 
     this.subscriptions.add(
       this.gameService.gameSummary$.subscribe(summary => {
-        const hadSummary = this.gameSummary !== null;
-        const hasSummary = summary !== null;
         this.gameSummary = summary;
-        if (!hadSummary && hasSummary) {
-          this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
-        } else if (hadSummary && !hasSummary && this.currentLevel) {
-          this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
+        if (!summary) {
+          this.showVictoryHold = false;
+          this.showSummaryOverlay = false;
+          return;
+        }
+
+        if (summary.correct) {
+          this.showVictoryHold = true;
+          this.showSummaryOverlay = false;
+        } else {
+          this.openSummaryOverlay();
         }
       })
     );
@@ -697,10 +871,10 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       if (this.currentLevel) {
         this.initializeLevel(this.currentLevel);
       } else {
-        this.gameService.resetGame();
-        this.gameCompleted = false;
-        this.gameWon = false;
-        this.triggerCheckPulse(null);
+      this.gameService.resetGame();
+      this.gameCompleted = false;
+      this.gameWon = false;
+      this.triggerCheckPulse(null);
       }
       this.feedbackService.playEvent(SfxEvent.UiPopupClose);
     }
@@ -738,19 +912,51 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
 
+    this.showSummaryOverlay = false;
+    this.showVictoryHold = false;
+    console.log('[GameBoard] Retry current level', {
+      levelId: this.currentLevel.id,
+      levelName: this.currentLevel.name
+    });
     this.initializeLevel(this.currentLevel);
     this.retryLevel.emit();
   }
 
   handleCompletionNext(): void {
-    if (!this.gameSummary || !this.gameWon) {
+    if (!this.gameSummary || !this.gameWon || !this.canGoNextLevel) {
+      console.log('[GameBoard] Next level click ignored', {
+        hasSummary: !!this.gameSummary,
+        gameWon: this.gameWon,
+        canGoNextLevel: this.canGoNextLevel
+      });
       return;
     }
+    this.showSummaryOverlay = false;
+    this.showVictoryHold = false;
+    console.log('[GameBoard] Proceed to next level', {
+      currentLevelId: this.currentLevel?.id,
+      nextLevelAvailable: this.canGoNextLevel
+    });
     this.nextLevel.emit();
   }
 
   handleCompletionExit(): void {
+    this.showSummaryOverlay = false;
+    this.showVictoryHold = false;
+    console.log('[GameBoard] Exit to menu requested');
     this.exitToMenu.emit();
+  }
+
+  showSummaryNow(): void {
+    console.log('[GameBoard] Forcing summary overlay open', {
+      hasSummary: !!this.gameSummary,
+      showVictoryHold: this.showVictoryHold
+    });
+    this.openSummaryOverlay();
+  }
+
+  get postVictoryControlsVisible(): boolean {
+    return this.gameWon && !!this.gameSummary && !this.showSummaryOverlay && !this.showVictoryHold;
   }
 
   private initializeLevel(level: Level): void {
@@ -760,6 +966,8 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
     this.gameCompleted = false;
     this.gameWon = false;
     this.gameSummary = null;
+    this.showSummaryOverlay = false;
+    this.showVictoryHold = false;
     this.checkPulseState = null;
     this.victoryTriggeredByCheckButton = false;
     this.canGoNextLevel = this.levelService.hasNextLevel(level.id);
@@ -795,6 +1003,23 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       window.requestAnimationFrame(frameHandler);
     } else {
       frameHandler();
+    }
+  }
+
+  private openSummaryOverlay(): void {
+    if (!this.gameSummary) {
+      console.log('[GameBoard] openSummaryOverlay aborted: missing summary');
+      return;
+    }
+    this.showVictoryHold = false;
+    if (!this.showSummaryOverlay) {
+      this.showSummaryOverlay = true;
+      this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
+      console.log('[GameBoard] Summary overlay opened', {
+        levelId: this.gameSummary.levelId,
+        correct: this.gameSummary.correct,
+        durationMs: this.gameSummary.durationMs
+      });
     }
   }
 }

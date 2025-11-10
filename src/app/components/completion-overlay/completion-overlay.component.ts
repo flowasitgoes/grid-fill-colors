@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { GameSummary } from '../../models/game-summary.model';
 
 interface StatItem {
@@ -53,7 +53,7 @@ interface StatItem {
             <div class="preview-card">
               <header>
                 <span class="preview-card__title">完成樣貌</span>
-                <span class="preview-card__timestamp">{{ summary?.completedAt | date: 'shortTime' }}</span>
+                <span class="preview-card__timestamp">{{ summary!.completedAt | date: 'shortTime' }}</span>
               </header>
               <div class="preview-card__grid">
                 <div *ngFor="let row of summary?.finalGrid" class="preview-card__row">
@@ -102,8 +102,10 @@ interface StatItem {
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: clamp(20px, 5vh, 48px) clamp(16px, 4vw, 32px);
       z-index: 999;
       backdrop-filter: blur(4px);
+      overflow-y: auto;
     }
 
     .completion-overlay__backdrop {
@@ -116,6 +118,7 @@ interface StatItem {
     .completion-overlay__card {
       position: relative;
       width: min(940px, 90vw);
+      max-height: calc(100vh - clamp(40px, 10vh, 96px));
       background: rgba(18, 24, 56, 0.92);
       border-radius: 28px;
       box-shadow: 0 32px 60px rgba(4, 10, 32, 0.6);
@@ -125,7 +128,8 @@ interface StatItem {
       flex-direction: column;
       gap: 28px;
       z-index: 1;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .completion-overlay__card::after {
@@ -235,9 +239,10 @@ interface StatItem {
     }
 
     .stats-grid__item--highlight {
-      background: linear-gradient(135deg, rgba(255, 215, 120, 0.28), rgba(255, 162, 92, 0.18));
-      border-color: rgba(255, 215, 120, 0.4);
-      color: #281a00;
+      background: linear-gradient(90deg, rgb(7, 174, 234) 0%, rgb(43, 245, 152) 100%);
+      border-color: rgba(43, 201, 220, 0.7);
+      color: #ffffff;
+      box-shadow: 0 12px 28px rgba(32, 210, 192, 0.4);
     }
 
     .stats-grid__item dt,
@@ -253,7 +258,7 @@ interface StatItem {
     }
 
     .stats-grid__item--highlight .stats-grid__label {
-      color: rgba(66, 48, 12, 0.75);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .stats-grid__value {
@@ -263,7 +268,7 @@ interface StatItem {
     }
 
     .stats-grid__item--highlight .stats-grid__value {
-      color: #543200;
+      color: #ffffff;
     }
 
     .completion-overlay__preview {
@@ -425,7 +430,7 @@ interface StatItem {
     }
   `]
 })
-export class CompletionOverlayComponent {
+export class CompletionOverlayComponent implements OnChanges {
   @Input() summary: GameSummary | null = null;
   @Input() visible = false;
   @Input() isVictory = false;
@@ -434,6 +439,31 @@ export class CompletionOverlayComponent {
   @Output() retry = new EventEmitter<void>();
   @Output() next = new EventEmitter<void>();
   @Output() exit = new EventEmitter<void>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('[CompletionOverlay] Input changes', {
+      visible: this.visible,
+      isVictory: this.isVictory,
+      canGoNext: this.canGoNext,
+      summaryPresent: !!this.summary,
+      changes
+    });
+
+    if (this.summary) {
+      console.log('[CompletionOverlay] Summary snapshot', {
+        levelId: this.summary.levelId,
+        levelName: this.summary.levelName,
+        correct: this.summary.correct,
+        durationMs: this.summary.durationMs,
+        fillActions: this.summary.fillActions,
+        hintCount: this.summary.hintCount,
+        bestStreak: this.summary.bestStreak,
+        efficiencyGrade: this.summary.efficiencyGrade
+      });
+    } else {
+      console.log('[CompletionOverlay] No summary data available');
+    }
+  }
 
   get statItems(): StatItem[] {
     if (!this.summary) {

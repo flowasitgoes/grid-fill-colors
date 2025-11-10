@@ -568,7 +568,7 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
     this.loadingTimeoutId = window.setTimeout(() => {
       this.loadingTimeoutId = null;
       this.completeStartSequence();
-    }, 8000);
+    }, 3000);
   }
 
   private tryPlayAudio(audio: HTMLAudioElement): void {
