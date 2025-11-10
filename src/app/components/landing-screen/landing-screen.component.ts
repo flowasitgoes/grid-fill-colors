@@ -243,8 +243,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       }
 
       .landing__footer {
-        position: static;
-        margin-top: 12px;
+        display: none;
       }
     }
 
