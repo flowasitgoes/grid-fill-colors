@@ -57,35 +57,52 @@ import { LandingScreenComponent } from './components/landing-screen/landing-scre
   `,
   styles: [`
     .app-container {
-      background: white;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      background: linear-gradient(160deg, rgba(30, 80, 180, 0.88) 0%, rgba(34, 164, 215, 0.92) 55%, rgba(110, 228, 255, 0.9) 100%);
+      border-radius: 26px;
+      padding: 44px;
+      box-shadow: 0 30px 80px rgba(0, 22, 60, 0.45);
       min-height: 500px;
       max-width: 1000px;
       margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.18), transparent 55%),
+        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.14), transparent 60%),
+        radial-gradient(circle at 50% 85%, rgba(255, 201, 132, 0.22), transparent 65%);
+      mix-blend-mode: screen;
+      pointer-events: none;
     }
 
     .app-header {
+      position: relative;
       text-align: center;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 3px solid #ecf0f1;
+      margin-bottom: 44px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+      color: rgba(240, 252, 255, 0.92);
+      text-shadow: 0 0 22px rgba(18, 40, 110, 0.5);
     }
 
     h1 {
-      color: #2c3e50;
-      margin-bottom: 10px;
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin-bottom: 12px;
+      font-size: 2.6rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f7ecb5 40%, #93dfff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     .subtitle {
-      color: #7f8c8d;
+      color: rgba(233, 244, 255, 0.88);
       font-size: 1.1rem;
+      letter-spacing: 1px;
     }
 
     .content {
@@ -117,17 +134,21 @@ import { LandingScreenComponent } from './components/landing-screen/landing-scre
     }
 
     .instructions {
-      background: #f8f9fa;
-      padding: 25px;
-      border-radius: 15px;
-      margin-top: 30px;
+      background: linear-gradient(145deg, rgba(8, 40, 88, 0.65), rgba(20, 88, 150, 0.55));
+      padding: 28px;
+      border-radius: 18px;
+      margin-top: 32px;
       text-align: left;
+      color: rgba(230, 244, 255, 0.9);
+      box-shadow: inset 0 0 30px rgba(0, 26, 68, 0.35);
+      backdrop-filter: blur(6px);
     }
 
     .instructions h3 {
-      color: #2c3e50;
-      margin-bottom: 15px;
+      color: #ffefb0;
+      margin-bottom: 16px;
       font-size: 1.3rem;
+      letter-spacing: 1px;
     }
 
     .instructions ul {
@@ -136,20 +157,20 @@ import { LandingScreenComponent } from './components/landing-screen/landing-scre
     }
 
     .instructions li {
-      margin-bottom: 10px;
-      color: #555;
+      margin-bottom: 12px;
+      color: rgba(217, 237, 255, 0.92);
       font-size: 1rem;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     @media (max-width: 768px) {
       .app-container {
-        padding: 20px;
-        border-radius: 10px;
+        padding: 28px;
+        border-radius: 18px;
       }
 
       h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
       }
     }
   `]

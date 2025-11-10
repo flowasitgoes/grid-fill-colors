@@ -528,7 +528,7 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
     }
 
     audio.volume = this.baseVolume;
-    audio.loop = true;
+    audio.loop = false;
     this.tryPlayAudio(audio);
   }
 
@@ -597,7 +597,7 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
         audio.pause();
         audio.currentTime = 0;
         audio.volume = this.baseVolume;
-        audio.loop = true;
+        audio.loop = false;
 
         window.clearInterval(this.fadeIntervalId!);
         this.fadeIntervalId = null;
@@ -619,8 +619,8 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
 
     audio.pause();
     audio.currentTime = 0;
-    audio.loop = false;
     audio.volume = this.baseVolume;
+    audio.loop = false;
     this.tryPlayAudio(audio);
   }
 
