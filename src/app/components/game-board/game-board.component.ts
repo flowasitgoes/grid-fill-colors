@@ -109,10 +109,11 @@ import { FeedbackService } from '../../services/feedback.service';
       gap: 30px;
       position: relative;
       overflow: hidden;
-      background: rgba(16, 18, 44, 0.45);
+      background: rgba(13, 18, 47, 0.6);
       border-radius: 24px;
-      padding: 40px 60px;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.35);
+      padding: 48px 60px 54px;
+      box-shadow: 0 28px 72px rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
     }
 
     .level-info {
@@ -158,7 +159,8 @@ import { FeedbackService } from '../../services/feedback.service';
       color: #666;
       position: relative;
       overflow: hidden;
-      background-image: linear-gradient(145deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+      background-image: linear-gradient(145deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.18);
     }
 
     .color-sample:hover {
@@ -171,7 +173,7 @@ import { FeedbackService } from '../../services/feedback.service';
       box-shadow: 0 0 18px rgba(102, 126, 234, 0.45);
       transform: scale(1.08);
       animation: colorGlow 600ms ease;
-      background-image: linear-gradient(145deg, rgba(255,255,255,0.55), rgba(255,255,255,0.15));
+      background-image: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
     }
 
     .color-sample::after {
@@ -229,12 +231,17 @@ import { FeedbackService } from '../../services/feedback.service';
       flex-direction: column;
       align-items: center;
       gap: 10px;
+      position: relative;
+      z-index: 3;
     }
 
     .reference-section h3 {
       color: #ffffff;
       font-size: 0.9rem;
       margin: 0;
+      text-shadow: 0 0 8px rgba(255,255,255,0.35);
+      position: relative;
+      z-index: 3;
     }
 
     .reference-grid {
@@ -243,6 +250,8 @@ import { FeedbackService } from '../../services/feedback.service';
       border-radius: 8px;
       border: 2px solid #ddd;
       box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      position: relative;
+      z-index: 3;
     }
 
     .reference-row {

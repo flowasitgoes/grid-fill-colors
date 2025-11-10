@@ -9,9 +9,9 @@ import { Injectable } from '@angular/core';
 export class FeedbackService {
   private audioContext?: AudioContext;
   private colorSpectra: Record<string, { base: number; harmonic: number[] }> = {
-    red: { base: 320, harmonic: [480, 720, 960] },
-    blue: { base: 260, harmonic: [390, 520, 780] },
-    white: { base: 540, harmonic: [720, 860, 1080] },
+    red: { base: 340, harmonic: [510, 680, 1020] },
+    blue: { base: 240, harmonic: [360, 480, 720] },
+    white: { base: 520, harmonic: [650, 780, 1040] },
     empty: { base: 180, harmonic: [240, 320, 400] }
   };
   private crowdNoiseBuffer?: AudioBuffer;
@@ -27,15 +27,16 @@ export class FeedbackService {
    * 播放橡皮擦音效
    */
   playCellErase(): void {
-    this.playPop(160, 0.12, -0.25);
+    this.playPop(150, 0.14, -0.35);
+    this.playSparkle(180, 0.22, 0.18);
   }
 
   /**
    * 播放顏色切換音效
    */
   playColorSwitch(color: string): void {
-    const palette = this.colorSpectra[color] ?? this.colorSpectra['red'];
-    this.playSparkle(palette.base, 0.28);
+    const palette = this.colorSpectra[color] ?? this.colorSpectra['empty'];
+    this.playSparkle(palette.base * 1.2, 0.32, 0.25);
   }
 
   /**
@@ -43,7 +44,8 @@ export class FeedbackService {
    */
   playCheckAnswer(success: boolean): void {
     if (success) {
-      this.playChord([600, 720, 880], 0.35);
+      this.playChord([600, 720, 880], 0.45);
+      this.playCrowdWave(0.6);
     } else {
       this.playPop(140, 0.2, 0.4);
     }
@@ -55,8 +57,8 @@ export class FeedbackService {
   playColorFill(color: string): void {
     const palette = this.colorSpectra[color] ?? this.colorSpectra['red'];
     const frequencies = [palette.base, ...palette.harmonic];
-    this.playArpeggio(frequencies, 0.45);
-    this.playCrowdWave(0.4);
+    this.playArpeggio(frequencies, 0.55);
+    this.playSparkle(palette.base * 1.4, 0.26, 0.35);
   }
 
   private getContext(): AudioContext | undefined {
@@ -111,7 +113,7 @@ export class FeedbackService {
     oscillator.stop(now + duration + 0.05);
   }
 
-  private playSparkle(frequency: number, duration: number): void {
+  private playSparkle(frequency: number, duration: number, shimmer: number): void {
     const context = this.getContext();
     if (!context) {
       return;
@@ -126,12 +128,12 @@ export class FeedbackService {
 
     oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(frequency, context.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(frequency * 2, context.currentTime + duration);
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * (1 + shimmer), context.currentTime + duration);
 
     const now = context.currentTime;
 
     gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.28, now + 0.04);
+    gain.gain.linearRampToValueAtTime(0.24, now + 0.04);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
     oscillator.connect(gain);
@@ -164,7 +166,7 @@ export class FeedbackService {
 
       const gain = context.createGain();
       const startTime = now + index * step;
-      const peak = Math.max(0.18, 0.28 - index * 0.04);
+      const peak = Math.max(0.18, 0.3 - index * 0.05);
 
       gain.gain.setValueAtTime(0, startTime);
       gain.gain.linearRampToValueAtTime(peak, startTime + 0.05);
@@ -193,7 +195,7 @@ export class FeedbackService {
     }
 
     const channels = 1;
-    const frameCount = context.sampleRate * 0.4;
+    const frameCount = context.sampleRate * 0.6;
     const buffer = context.createBuffer(channels, frameCount, context.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < frameCount; i++) {
@@ -221,7 +223,7 @@ export class FeedbackService {
       const now = context.currentTime;
       gain.gain.setValueAtTime(0, now);
       gain.gain.linearRampToValueAtTime(0.18 * intensity, now + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
 
       source.connect(gain);
       gain.connect(context.destination);
