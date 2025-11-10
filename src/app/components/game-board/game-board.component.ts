@@ -5,8 +5,8 @@ import { GameService } from '../../services/game.service';
 import { Level } from '../../models/level.model';
 
 /**
- * 游戏面板组件
- * 显示参考图案和可填色的游戏网格
+ * 遊戲面板元件
+ * 顯示參考圖案與可填色的遊戲網格
  */
 @Component({
   selector: 'app-game-board',
@@ -17,7 +17,7 @@ import { Level } from '../../models/level.model';
       <div class="level-info">
         <h2>{{ currentLevel.name }}</h2>
         <div class="level-colors">
-          <span>选择画笔颜色：</span>
+          <span>選擇畫筆顏色：</span>
           <div class="color-samples">
             <span 
               *ngFor="let color of currentLevel.colors" 
@@ -41,7 +41,7 @@ import { Level } from '../../models/level.model';
       <div class="game-area">
         <!-- 参考答案 -->
         <div class="reference-section">
-          <h3>参考图案</h3>
+          <h3>參考圖案</h3>
           <div class="reference-grid">
             <div *ngFor="let row of currentLevel.solution; let r = index" class="reference-row">
               <div 
@@ -73,7 +73,7 @@ import { Level } from '../../models/level.model';
 
       <!-- 控制按钮 -->
       <div class="game-controls">
-        <button class="btn btn-primary" (click)="onCheckAnswer()">检查答案</button>
+        <button class="btn btn-primary" (click)="onCheckAnswer()">檢查答案</button>
         <button class="btn btn-secondary" (click)="onReset()">重置</button>
         <button class="btn btn-hint" (click)="onGetHint()">提示</button>
       </div>
@@ -81,8 +81,8 @@ import { Level } from '../../models/level.model';
       <!-- 游戏结果提示 -->
       <div class="game-result" *ngIf="gameCompleted">
         <div class="result-message" [class.success]="gameWon" [class.failure]="!gameWon">
-          <h3 *ngIf="gameWon">🎉 恭喜！答案正确！</h3>
-          <h3 *ngIf="!gameWon">❌ 答案有误，请再试试</h3>
+          <h3 *ngIf="gameWon">🎉 恭喜！答案正確！</h3>
+          <h3 *ngIf="!gameWon">❌ 答案有誤，請再試試</h3>
         </div>
       </div>
     </div>
@@ -311,7 +311,7 @@ export class GameBoardComponent implements OnInit {
   currentLevel: Level | null = null;
   gameCompleted: boolean = false;
   gameWon: boolean = false;
-  selectedColor: string = '';  // 当前选中的画笔颜色
+  selectedColor: string = '';  // 當前選中的畫筆顏色
 
   constructor(private gameService: GameService) {}
 
@@ -337,41 +337,41 @@ export class GameBoardComponent implements OnInit {
   }
 
   /**
-   * 选择画笔颜色
+   * 選擇畫筆顏色
    */
   selectColor(color: string): void {
     this.selectedColor = color;
   }
 
   /**
-   * 获取单元格颜色
+   * 取得單元格顏色
    */
   getCellColor(row: number, col: number): string {
     return this.gameService.getCellColor(row, col);
   }
 
   /**
-   * 处理单元格点击 - 用选中的画笔颜色填充
+   * 處理單元格點擊：用選中的畫筆顏色填充
    */
   onCellClick(event: {row: number, col: number}): void {
     this.gameService.fillCellWithColor(event.row, event.col, this.selectedColor);
   }
 
   /**
-   * 处理单元格右键点击（清空）
+   * 處理單元格右鍵點擊（清空）
    */
   onCellRightClick(event: {row: number, col: number}): void {
     this.gameService.clearCell(event.row, event.col);
   }
 
   /**
-   * 检查答案
+   * 檢查答案
    */
   onCheckAnswer(): void {
     const result = this.gameService.checkAnswer();
     
     if (!result.completed) {
-      alert('请先填满所有格子！');
+      alert('請先填滿所有格子！');
     }
   }
 
@@ -379,7 +379,7 @@ export class GameBoardComponent implements OnInit {
    * 重置游戏
    */
   onReset(): void {
-    if (confirm('确定要重置游戏吗？')) {
+    if (confirm('確定要重置遊戲嗎？')) {
       this.gameService.resetGame();
       this.gameCompleted = false;
       this.gameWon = false;
@@ -392,14 +392,14 @@ export class GameBoardComponent implements OnInit {
   onGetHint(): void {
     const hint = this.gameService.getHint();
     if (hint) {
-      // 提示已自动填充，无需额外操作
+      // 提示已自動填充，無需額外操作
     } else {
-      alert('恭喜！所有格子都正确了！');
+      alert('恭喜！所有格子都正確了！');
     }
   }
 
   /**
-   * 根据颜色名称返回实际的颜色值
+   * 根據顏色名稱返回實際的顏色值
    */
   getColorValue(colorName: string): string {
     const colorMap: { [key: string]: string } = {

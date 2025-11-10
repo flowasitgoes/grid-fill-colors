@@ -11,36 +11,36 @@ import { Level } from './models/level.model';
   template: `
     <div class="app-container">
       <header class="app-header">
-        <h1>🎨 网格填色游戏</h1>
-        <p class="subtitle">参考图案，复制填色</p>
+        <h1>🎨 網格填色遊戲</h1>
+        <p class="subtitle">參考圖案，複製填色</p>
       </header>
 
-      <!-- 关卡选择界面 -->
+      <!-- 關卡選擇介面 -->
       <div class="content" *ngIf="!selectedLevel">
         <app-level-selector (levelSelected)="onLevelSelected($event)"></app-level-selector>
       </div>
 
-      <!-- 游戏面板 -->
+      <!-- 遊戲面板 -->
       <div class="content" *ngIf="selectedLevel">
         <app-game-board [level]="selectedLevel"></app-game-board>
         
         <div class="back-button-container">
           <button class="btn-back" (click)="backToLevelSelect()">
-            ← 返回关卡选择
+            ← 返回關卡選擇
           </button>
         </div>
       </div>
 
-      <!-- 游戏说明 -->
+      <!-- 遊戲說明 -->
       <div class="instructions" *ngIf="!selectedLevel">
-        <h3>游戏规则</h3>
+        <h3>遊戲規則</h3>
         <ul>
-          <li>🎨 参考左侧的图案，在右侧网格中填色复制</li>
-          <li>🖌️ 先点击上方的颜色块选择画笔颜色</li>
-          <li>🖱️ 然后点击网格方块进行填色</li>
-          <li>✕ 点击橡皮擦可以清除颜色</li>
-          <li>✅ 填满所有方块后点击"检查答案"查看结果</li>
-          <li>💡 遇到困难可以使用"提示"功能自动填充一格</li>
+          <li>🎨 參考左側的圖案，在右側網格中填色複製</li>
+          <li>🖌️ 先點擊上方的顏色塊選擇畫筆顏色</li>
+          <li>🖱️ 然後點擊網格方塊進行填色</li>
+          <li>✕ 點擊橡皮擦可以清除顏色</li>
+          <li>✅ 填滿所有方塊後點擊「檢查答案」查看結果</li>
+          <li>💡 遇到困難可以使用「提示」功能自動填充一格</li>
         </ul>
       </div>
     </div>
@@ -145,18 +145,18 @@ import { Level } from './models/level.model';
   `]
 })
 export class AppComponent {
-  title = '网格填色游戏';
+  title = '網格填色遊戲';
   selectedLevel: Level | null = null;
 
   /**
-   * 处理关卡选择
+   * 處理關卡選擇
    */
   onLevelSelected(level: Level): void {
     this.selectedLevel = level;
   }
 
   /**
-   * 返回关卡选择界面
+   * 返回關卡選擇介面
    */
   backToLevelSelect(): void {
     this.selectedLevel = null;

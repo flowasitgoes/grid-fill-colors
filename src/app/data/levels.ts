@@ -1,13 +1,13 @@
 import { Level } from '../models/level.model';
 
 /**
- * 预设关卡数据
- * 包含3个不同难度的关卡
+ * 預設關卡資料
+ * 包含 3 個不同難度的關卡
  */
 export const LEVELS: Level[] = [
   {
     id: 1,
-    name: '关卡 1 - 十字图案',
+    name: '關卡 1 - 十字圖案',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'easy',
@@ -35,7 +35,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 2,
-    name: '关卡 2 - 竖条纹',
+    name: '關卡 2 - 豎條紋',
     size: 5,
     colors: ['blue', 'white'],
     difficulty: 'easy',
@@ -63,7 +63,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 3,
-    name: '关卡 3 - 笑脸图案',
+    name: '關卡 3 - 笑臉圖案',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'medium',
@@ -91,7 +91,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 4,
-    name: '关卡 4 - 对角线',
+    name: '關卡 4 - 對角線',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'easy',
@@ -119,7 +119,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 5,
-    name: '关卡 5 - 棋盘格',
+    name: '關卡 5 - 棋盤格',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'medium',
@@ -147,7 +147,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 6,
-    name: '关卡 6 - 心形',
+    name: '關卡 6 - 心形',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'medium',
@@ -175,7 +175,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 7,
-    name: '关卡 7 - 箭头',
+    name: '關卡 7 - 箭頭',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'medium',
@@ -203,7 +203,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 8,
-    name: '关卡 8 - 边框',
+    name: '關卡 8 - 邊框',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'easy',
@@ -231,7 +231,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 9,
-    name: '关卡 9 - 角落',
+    name: '關卡 9 - 角落',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'medium',
@@ -259,7 +259,7 @@ export const LEVELS: Level[] = [
   },
   {
     id: 10,
-    name: '关卡 10 - 钻石',
+    name: '關卡 10 - 鑽石',
     size: 5,
     colors: ['red', 'blue'],
     difficulty: 'hard',

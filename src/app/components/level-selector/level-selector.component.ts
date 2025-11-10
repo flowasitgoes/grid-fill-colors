@@ -4,8 +4,8 @@ import { LevelService } from '../../services/level.service';
 import { Level } from '../../models/level.model';
 
 /**
- * 关卡选择器组件
- * 显示所有可用关卡供玩家选择
+ * 關卡選擇器元件
+ * 顯示所有可用關卡供玩家選擇
  */
 @Component({
   selector: 'app-level-selector',
@@ -13,7 +13,7 @@ import { Level } from '../../models/level.model';
   imports: [CommonModule],
   template: `
     <div class="level-selector">
-      <h2>选择关卡</h2>
+      <h2>選擇關卡</h2>
       <div class="level-grid">
         <div 
           *ngFor="let level of levels" 
@@ -203,7 +203,7 @@ export class LevelSelectorComponent implements OnInit {
   }
 
   /**
-   * 处理关卡选择
+   * 處理關卡選擇
    */
   onLevelSelect(level: Level): void {
     this.levelSelected.emit(level);
@@ -215,19 +215,19 @@ export class LevelSelectorComponent implements OnInit {
   }
 
   /**
-   * 获取难度文本
+   * 取得難度文字
    */
   getDifficultyText(difficulty: string): string {
     const difficultyMap: { [key: string]: string } = {
-      'easy': '简单',
+      'easy': '簡單',
       'medium': '中等',
-      'hard': '困难'
+      'hard': '困難'
     };
     return difficultyMap[difficulty] || difficulty;
   }
 
   /**
-   * 根据颜色名称返回实际的颜色值
+   * 根據顏色名稱返回實際的顏色值
    */
   getColorValue(colorName: string): string {
     const colorMap: { [key: string]: string } = {
