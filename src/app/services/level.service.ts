@@ -106,6 +106,24 @@ export class LevelService {
   }
 
   /**
+   * 取得下一關
+   */
+  getNextLevel(currentId: number): Level | null {
+    const index = this.levels.findIndex(level => level.id === currentId);
+    if (index >= 0 && index < this.levels.length - 1) {
+      return this.levels[index + 1];
+    }
+    return null;
+  }
+
+  /**
+   * 判斷是否還有下一關
+   */
+  hasNextLevel(currentId: number): boolean {
+    return this.getNextLevel(currentId) !== null;
+  }
+
+  /**
    * 根据解答矩阵自动生成行提示
    * 扫描每一行，识别连续相同颜色的方块
    */

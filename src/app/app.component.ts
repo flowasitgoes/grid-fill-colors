@@ -4,6 +4,7 @@ import { LevelSelectorComponent } from './components/level-selector/level-select
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { Level } from './models/level.model';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
+import { LevelService } from './services/level.service';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,12 @@ import { LandingScreenComponent } from './components/landing-screen/landing-scre
 
         <!-- 遊戲面板 -->
         <div class="content" *ngIf="selectedLevel">
-          <app-game-board [level]="selectedLevel"></app-game-board>
+          <app-game-board
+            [level]="selectedLevel"
+            (retryLevel)="handleRetryLevel()"
+            (nextLevel)="handleNextLevel()"
+            (exitToMenu)="backToLevelSelect()"
+          ></app-game-board>
           
           <div class="back-button-container">
             <button class="btn-back" (click)="backToLevelSelect()">
@@ -181,6 +187,8 @@ export class AppComponent {
   showLanding = true;
   isLandingLeaving = false;
 
+  constructor(private levelService: LevelService) {}
+
   /**
    * 處理關卡選擇
    */
@@ -209,6 +217,24 @@ export class AppComponent {
    */
   backToLevelSelect(): void {
     this.selectedLevel = null;
+  }
+
+  handleRetryLevel(): void {
+    // 保留鉤子，未來可加入統計或提示
+  }
+
+  handleNextLevel(): void {
+    if (!this.selectedLevel) {
+      return;
+    }
+
+    const nextLevel = this.levelService.getNextLevel(this.selectedLevel.id);
+    if (nextLevel) {
+      this.selectedLevel = nextLevel;
+    } else {
+      alert('已完成所有關卡，返回選單！');
+      this.backToLevelSelect();
+    }
   }
 }
 

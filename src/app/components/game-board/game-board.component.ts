@@ -1,10 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GridCellComponent } from '../grid-cell/grid-cell.component';
 import { GameService } from '../../services/game.service';
 import { Level } from '../../models/level.model';
 import { FeedbackService } from '../../services/feedback.service';
 import { SfxEvent } from '../../models/sfx-event';
+import { CompletionOverlayComponent } from '../completion-overlay/completion-overlay.component';
+import { GameSummary } from '../../models/game-summary.model';
+import { LevelService } from '../../services/level.service';
+import { Subscription } from 'rxjs';
 
 /**
  * 遊戲面板元件
@@ -13,7 +17,7 @@ import { SfxEvent } from '../../models/sfx-event';
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [CommonModule, GridCellComponent],
+  imports: [CommonModule, GridCellComponent, CompletionOverlayComponent],
   template: `
     <div class="game-board-container" *ngIf="currentLevel">
       <div class="stage-lights">
@@ -93,14 +97,17 @@ import { SfxEvent } from '../../models/sfx-event';
         <button class="btn btn-hint" (click)="onGetHint()">提示</button>
       </div>
 
-      <!-- 游戏结果提示 -->
-      <div class="game-result" *ngIf="gameCompleted">
-        <div class="result-message" [class.success]="gameWon" [class.failure]="!gameWon">
-          <h3 *ngIf="gameWon">🎉 恭喜！答案正確！</h3>
-          <h3 *ngIf="!gameWon">❌ 答案有誤，請再試試</h3>
-        </div>
-      </div>
     </div>
+
+    <app-completion-overlay
+      [visible]="gameSummary !== null"
+      [summary]="gameSummary"
+      [isVictory]="gameWon"
+      [canGoNext]="canGoNextLevel"
+      (retry)="handleCompletionRetry()"
+      (next)="handleCompletionNext()"
+      (exit)="handleCompletionExit()"
+    ></app-completion-overlay>
   `,
   styles: [`
     .game-board-container {
@@ -343,33 +350,6 @@ import { SfxEvent } from '../../models/sfx-event';
       color: white;
     }
 
-    .game-result {
-      margin-top: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .result-message {
-      padding: 20px 40px;
-      border-radius: 10px;
-      animation: slideIn 0.5s ease;
-    }
-
-    .result-message.success {
-      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-      color: white;
-    }
-
-    .result-message.failure {
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-      color: white;
-    }
-
-    .result-message h3 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-
     .game-section.check-pulse-success {
       animation: pulseSuccess 650ms ease;
     }
@@ -380,17 +360,6 @@ import { SfxEvent } from '../../models/sfx-event';
 
     .game-section.check-pulse-incomplete {
       animation: pulseIncomplete 650ms ease;
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
 
     @keyframes colorGlow {
@@ -577,35 +546,37 @@ import { SfxEvent } from '../../models/sfx-event';
     }
   `]
 })
-export class GameBoardComponent implements OnInit, OnDestroy {
+export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   @Input() level: Level | null = null;
-  
+  @Output() retryLevel = new EventEmitter<void>();
+  @Output() nextLevel = new EventEmitter<void>();
+  @Output() exitToMenu = new EventEmitter<void>();
+
   currentLevel: Level | null = null;
   gameCompleted: boolean = false;
   gameWon: boolean = false;
   selectedColor: string = '';  // 當前選中的畫筆顏色
   checkPulseState: 'success' | 'failure' | 'incomplete' | null = null;
+  gameSummary: GameSummary | null = null;
+  canGoNextLevel = false;
   private checkPulseTimeout: ReturnType<typeof setTimeout> | null = null;
   private victoryTriggeredByCheckButton = false;
+  private subscriptions = new Subscription();
 
-  constructor(private gameService: GameService, private feedbackService: FeedbackService) {}
+  constructor(
+    private gameService: GameService,
+    private feedbackService: FeedbackService,
+    private levelService: LevelService
+  ) {}
 
   ngOnInit(): void {
-    if (this.level) {
-      this.currentLevel = this.level;
-      this.gameService.initGame(this.level);
-      this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
-      
-      // 默认选择第一个颜色
-      if (this.level.colors && this.level.colors.length > 0) {
-        this.selectedColor = this.level.colors[0];
-      }
-      
-      // 订阅游戏状态
+    this.subscriptions.add(
       this.gameService.gameCompleted$.subscribe(completed => {
         this.gameCompleted = completed;
-      });
+      })
+    );
 
+    this.subscriptions.add(
       this.gameService.gameWon$.subscribe(won => {
         const previousState = this.gameWon;
         this.gameWon = won;
@@ -618,7 +589,33 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         } else if (!won) {
           this.victoryTriggeredByCheckButton = false;
         }
-      });
+      })
+    );
+
+    this.subscriptions.add(
+      this.gameService.gameSummary$.subscribe(summary => {
+        const hadSummary = this.gameSummary !== null;
+        const hasSummary = summary !== null;
+        this.gameSummary = summary;
+        if (!hadSummary && hasSummary) {
+          this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
+        } else if (hadSummary && !hasSummary && this.currentLevel) {
+          this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
+        }
+      })
+    );
+
+    if (this.level && !this.currentLevel) {
+      this.initializeLevel(this.level);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('level' in changes) {
+      const current: Level | null = changes['level'].currentValue;
+      if (current && (!this.currentLevel || this.currentLevel.id !== current.id)) {
+        this.initializeLevel(current);
+      }
     }
   }
 
@@ -627,6 +624,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
       clearTimeout(this.checkPulseTimeout);
       this.checkPulseTimeout = null;
     }
+    this.subscriptions.unsubscribe();
     this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
   }
 
@@ -696,10 +694,14 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   onReset(): void {
     this.feedbackService.playEvent(SfxEvent.UiClick);
     if (confirm('確定要重置遊戲嗎？')) {
-      this.gameService.resetGame();
-      this.gameCompleted = false;
-      this.gameWon = false;
-      this.triggerCheckPulse(null);
+      if (this.currentLevel) {
+        this.initializeLevel(this.currentLevel);
+      } else {
+        this.gameService.resetGame();
+        this.gameCompleted = false;
+        this.gameWon = false;
+        this.triggerCheckPulse(null);
+      }
       this.feedbackService.playEvent(SfxEvent.UiPopupClose);
     }
   }
@@ -729,6 +731,44 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     };
 
     return colorMap[colorName] || colorName;
+  }
+
+  handleCompletionRetry(): void {
+    if (!this.currentLevel) {
+      return;
+    }
+
+    this.initializeLevel(this.currentLevel);
+    this.retryLevel.emit();
+  }
+
+  handleCompletionNext(): void {
+    if (!this.gameSummary || !this.gameWon) {
+      return;
+    }
+    this.nextLevel.emit();
+  }
+
+  handleCompletionExit(): void {
+    this.exitToMenu.emit();
+  }
+
+  private initializeLevel(level: Level): void {
+    this.currentLevel = level;
+    this.gameService.initGame(level);
+    this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
+    this.gameCompleted = false;
+    this.gameWon = false;
+    this.gameSummary = null;
+    this.checkPulseState = null;
+    this.victoryTriggeredByCheckButton = false;
+    this.canGoNextLevel = this.levelService.hasNextLevel(level.id);
+    if (level.colors && level.colors.length > 0) {
+      this.selectedColor = level.colors[0];
+    } else {
+      this.selectedColor = '';
+    }
+    this.triggerCheckPulse(null);
   }
 
   private triggerCheckPulse(state: 'success' | 'failure' | 'incomplete' | null): void {

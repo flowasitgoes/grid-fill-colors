@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Level } from '../models/level.model';
-import { Cell } from '../models/cell.model';
+import { GameSummary, GameEfficiencyGrade } from '../models/game-summary.model';
 
 /**
  * 游戏服务
@@ -15,10 +15,20 @@ export class GameService {
   private gameGrid: string[][] = []; // 玩家当前填色状态
   private gameCompleted = new BehaviorSubject<boolean>(false);
   private gameWon = new BehaviorSubject<boolean>(false);
+  private gameSummary = new BehaviorSubject<GameSummary | null>(null);
+
+  private gameStartTimestamp: number | null = null;
+  private fillActions = 0;
+  private eraseActions = 0;
+  private hintCount = 0;
+  private bestStreak = 0;
+  private currentStreak = 0;
+  private lastCompletionStamp: string | null = null;
 
   // 可观察的游戏状态
   public gameCompleted$ = this.gameCompleted.asObservable();
   public gameWon$ = this.gameWon.asObservable();
+  public gameSummary$ = this.gameSummary.asObservable();
 
   /**
    * 初始化游戏（加载关卡）
@@ -27,6 +37,8 @@ export class GameService {
     this.currentLevel = level;
     this.gameCompleted.next(false);
     this.gameWon.next(false);
+    this.gameSummary.next(null);
+    this.resetStats();
     
     // 初始化空白网格
     this.gameGrid = Array(5).fill(null).map(() => Array(5).fill(''));
@@ -84,6 +96,9 @@ export class GameService {
       }
     }
 
+    const newColor = this.gameGrid[row][col];
+    this.recordAction(newColor ? 'fill' : 'erase', row, col, newColor, currentColor);
+
     // 每次填色後更新完成狀態
     this.updateCompletionState();
   }
@@ -97,7 +112,9 @@ export class GameService {
     }
 
     if (row >= 0 && row < 5 && col >= 0 && col < 5) {
+      const previousColor = this.gameGrid[row][col];
       this.gameGrid[row][col] = color;
+      this.recordAction(color ? 'fill' : 'erase', row, col, color, previousColor);
       // 每次填色後更新完成狀態
       this.updateCompletionState();
     }
@@ -108,7 +125,9 @@ export class GameService {
    */
   clearCell(row: number, col: number): void {
     if (row >= 0 && row < 5 && col >= 0 && col < 5) {
+      const previousColor = this.gameGrid[row][col];
       this.gameGrid[row][col] = '';
+      this.recordAction('erase', row, col, '', previousColor);
       this.updateCompletionState();
     }
   }
@@ -120,6 +139,8 @@ export class GameService {
     this.gameGrid = Array(5).fill(null).map(() => Array(5).fill(''));
     this.gameCompleted.next(false);
     this.gameWon.next(false);
+    this.gameSummary.next(null);
+    this.resetStats();
   }
 
   /**
@@ -166,6 +187,7 @@ export class GameService {
     const isCorrect = this.validateGrid();
     this.gameCompleted.next(true);
     this.gameWon.next(isCorrect);
+    this.finalizeSummary(isCorrect);
   }
 
   /**
@@ -183,6 +205,7 @@ export class GameService {
     const isCorrect = this.validateGrid();
     this.gameCompleted.next(true);
     this.gameWon.next(isCorrect);
+    this.finalizeSummary(isCorrect);
 
     return { completed: true, correct: isCorrect };
   }
@@ -213,9 +236,124 @@ export class GameService {
 
     // 随机选择一个错误的格子并填充正确颜色
     const randomCell = wrongCells[Math.floor(Math.random() * wrongCells.length)];
+    const previousColor = this.gameGrid[randomCell.row][randomCell.col];
     this.gameGrid[randomCell.row][randomCell.col] = solution[randomCell.row][randomCell.col];
+    this.hintCount += 1;
+    this.recordAction('fill', randomCell.row, randomCell.col, solution[randomCell.row][randomCell.col], previousColor);
 
     return randomCell;
+  }
+
+  getLatestSummary(): GameSummary | null {
+    return this.gameSummary.value;
+  }
+
+  private recordAction(
+    type: 'fill' | 'erase',
+    row: number,
+    col: number,
+    newColor: string,
+    previousColor: string
+  ): void {
+    if (!this.currentLevel) {
+      return;
+    }
+
+    if (this.lastCompletionStamp) {
+      this.lastCompletionStamp = null;
+      this.gameSummary.next(null);
+    }
+
+    if (type === 'fill') {
+      this.fillActions += 1;
+    } else {
+      this.eraseActions += 1;
+    }
+
+    const solutionColor = this.currentLevel.solution[row][col];
+    const wasCorrect = previousColor !== '' && previousColor === solutionColor;
+    const isCorrectNow = newColor !== '' && newColor === solutionColor;
+
+    if (type === 'erase') {
+      if (wasCorrect) {
+        this.currentStreak = 0;
+      }
+      return;
+    }
+
+    if (isCorrectNow && !wasCorrect) {
+      this.currentStreak += 1;
+      if (this.currentStreak > this.bestStreak) {
+        this.bestStreak = this.currentStreak;
+      }
+    } else if (!isCorrectNow) {
+      this.currentStreak = 0;
+    }
+  }
+
+  private resetStats(): void {
+    this.gameStartTimestamp =
+      typeof performance !== 'undefined' ? performance.now() : Date.now();
+    this.fillActions = 0;
+    this.eraseActions = 0;
+    this.hintCount = 0;
+    this.bestStreak = 0;
+    this.currentStreak = 0;
+    this.lastCompletionStamp = null;
+  }
+
+  private finalizeSummary(isCorrect: boolean): void {
+    if (!this.currentLevel || this.lastCompletionStamp) {
+      return;
+    }
+
+    const completedAt = new Date().toISOString();
+    this.lastCompletionStamp = completedAt;
+
+    const now =
+      typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const durationMs =
+      this.gameStartTimestamp !== null ? Math.max(now - this.gameStartTimestamp, 0) : 0;
+
+    const summary: GameSummary = {
+      levelId: this.currentLevel.id,
+      levelName: this.currentLevel.name,
+      completed: true,
+      correct: isCorrect,
+      durationMs,
+      completedAt,
+      fillActions: this.fillActions,
+      eraseActions: this.eraseActions,
+      totalActions: this.fillActions + this.eraseActions,
+      hintCount: this.hintCount,
+      bestStreak: this.bestStreak,
+      efficiencyGrade: this.calculateGrade(isCorrect, durationMs, this.hintCount),
+      finalGrid: this.cloneGrid(this.gameGrid)
+    };
+
+    this.gameSummary.next(summary);
+  }
+
+  private calculateGrade(correct: boolean, durationMs: number, hints: number): GameEfficiencyGrade {
+    if (!correct) {
+      return 'C';
+    }
+
+    const durationSeconds = durationMs / 1000;
+
+    if (hints === 0 && durationSeconds <= 90) {
+      return 'A';
+    }
+
+    if (hints <= 2 && durationSeconds <= 150) {
+      return 'B';
+    }
+
+    return 'C';
+  }
+
+  private cloneGrid(grid: string[][]): string[][] {
+    return grid.map(row => [...row]);
   }
 }
 

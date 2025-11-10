@@ -41,15 +41,16 @@ export const SFX_CONFIG: Record<SfxEvent, SfxConfigEntry> = {
     volume: 0.85,
   },
   [SfxEvent.GameFillBasic]: {
-    files: ['assets/audio/gameplay/fill_basic_01.mp3'],
+    files: ['assets/audio/gameplay/fill_basic_paint.mp3'],
     group: 'sfx',
-    volume: 1.15,
-    playbackRate: { min: 0.96, max: 1.05 },
+    volume: 1.18,
+    playbackRate: { min: 0.94, max: 1.08 },
   },
   [SfxEvent.GameFillStreak]: {
-    files: ['assets/audio/gameplay/fill_streak_01.mp3'],
+    files: ['assets/audio/gameplay/fill_streak_paint.mp3'],
     group: 'sfx',
-    volume: 1.1,
+    volume: 1.12,
+    playbackRate: { min: 0.96, max: 1.12 },
   },
   [SfxEvent.GameEraser]: {
     files: ['assets/audio/gameplay/eraser_swipe_01.mp3'],
