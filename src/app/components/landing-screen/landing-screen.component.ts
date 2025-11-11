@@ -593,6 +593,9 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
   private fadeOutAudio(onComplete?: () => void): void {
     const audio = this.bgmRef?.nativeElement;
     if (!audio) {
+      if (onComplete) {
+        onComplete();
+      }
       return;
     }
 
@@ -600,7 +603,12 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    const maxIterations = 40;
+    let iterations = 0;
+
     this.fadeIntervalId = window.setInterval(() => {
+      iterations += 1;
+
       if (audio.volume <= 0.05) {
         audio.pause();
         audio.currentTime = 0;
@@ -615,7 +623,24 @@ export class LandingScreenComponent implements AfterViewInit, OnDestroy {
         return;
       }
 
-      audio.volume = Math.max(0, audio.volume - 0.05);
+      const previousVolume = audio.volume;
+      const nextVolume = Math.max(0, previousVolume - 0.05);
+      audio.volume = nextVolume;
+
+      const volumeAdjusted = Math.abs(audio.volume - previousVolume) > 0.001;
+
+      if (!volumeAdjusted || iterations >= maxIterations) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = this.baseVolume;
+        audio.loop = false;
+
+        window.clearInterval(this.fadeIntervalId!);
+        this.fadeIntervalId = null;
+        if (onComplete) {
+          onComplete();
+        }
+      }
     }, 60);
   }
 

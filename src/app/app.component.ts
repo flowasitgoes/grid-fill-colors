@@ -122,7 +122,7 @@ import { LevelService } from './services/level.service';
 
     .btn-back {
       padding: 12px 24px;
-      background: #95a5a6;
+      background: rgba(18, 24, 56, 0.92);
       color: white;
       border: none;
       border-radius: 8px;
