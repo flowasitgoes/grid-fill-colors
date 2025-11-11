@@ -18,6 +18,8 @@ export class FeedbackService {
   private activeLoops: Map<SfxEvent, { source: AudioBufferSourceNode; gain: GainNode }> =
     new Map();
 
+  private resumeListenersAttached = false;
+
   private colorSpectra: Record<string, { base: number; harmonic: number[] }> = {
     red: { base: 340, harmonic: [510, 680, 1020] },
     blue: { base: 240, harmonic: [360, 480, 720] },
@@ -118,6 +120,30 @@ export class FeedbackService {
       gain.connect(master);
       master.connect(context.destination);
 
+      source.onended = () => {
+        const current = this.activeLoops.get(event);
+        if (!current || current.source !== source) {
+          return;
+        }
+
+        try {
+          source.disconnect();
+        } catch {
+          // 忽略斷線失敗
+        }
+        try {
+          loopGain.disconnect();
+        } catch {
+          // 忽略斷線失敗
+        }
+
+        this.activeLoops.delete(event);
+
+        if (this.audioContext && this.audioContext.state === 'running') {
+          this.playLoop(event);
+        }
+      };
+
       source.start(0);
       this.activeLoops.set(event, { source, gain: loopGain });
     }).catch(() => undefined);
@@ -194,6 +220,7 @@ export class FeedbackService {
     }
 
     this.audioContext = new Ctor();
+    this.setupContextRecovery(this.audioContext);
     return this.audioContext;
   }
 
@@ -433,6 +460,54 @@ export class FeedbackService {
       gain.connect(context.destination);
       source.start(now);
     }).catch(() => undefined);
+  }
+
+  private setupContextRecovery(context: AudioContext): void {
+    if (this.resumeListenersAttached || typeof document === 'undefined') {
+      return;
+    }
+
+    const resumeContext = () => {
+      if (context.state !== 'running') {
+        context.resume().catch(() => undefined);
+      }
+    };
+
+    const resumeAndRevive = () => {
+      resumeContext();
+    };
+
+    const visibilityHandler = () => {
+      if (document.visibilityState === 'visible') {
+        resumeAndRevive();
+      }
+    };
+
+    const events: Array<{ name: keyof DocumentEventMap; options?: AddEventListenerOptions }> = [
+      { name: 'pointerdown', options: { passive: true } },
+      { name: 'touchstart', options: { passive: true } },
+      { name: 'keydown' }
+    ];
+
+    events.forEach(({ name, options }) => {
+      document.addEventListener(name, resumeAndRevive, options);
+    });
+    document.addEventListener('visibilitychange', visibilityHandler);
+
+    context.onstatechange = () => {
+      if (context.state === 'running') {
+        // 確保中斷後的環境音能正常恢復
+        const pendingLoops = [...this.activeLoops.entries()];
+        pendingLoops.forEach(([event, loop]) => {
+          if (!loop.source.buffer) {
+            this.activeLoops.delete(event);
+            this.playLoop(event);
+          }
+        });
+      }
+    };
+
+    this.resumeListenersAttached = true;
   }
 }
 
