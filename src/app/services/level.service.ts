@@ -75,8 +75,10 @@ export class LevelService {
     };
 
     const solution = level.solution.map(row => row.map(remapColor));
-    const rowHints = level.rowHints.map(row => row.map(hint => ({ ...hint, color: remapColor(hint.color) })));
-    const columnHints = level.columnHints.map(col => col.map(hint => ({ ...hint, color: remapColor(hint.color) })));
+    const baseRowHints = level.rowHints?.length ? level.rowHints : this.generateRowHints(level.solution);
+    const baseColumnHints = level.columnHints?.length ? level.columnHints : this.generateColumnHints(level.solution);
+    const rowHints = baseRowHints.map(row => row.map(hint => ({ ...hint, color: remapColor(hint.color) })));
+    const columnHints = baseColumnHints.map(col => col.map(hint => ({ ...hint, color: remapColor(hint.color) })));
 
     return {
       ...level,
@@ -221,7 +223,6 @@ export class LevelService {
     const generatedColHints = this.generateColumnHints(level.solution);
 
     // 简单比较（可以改进为深度比较）
-    return level.rowHints.length === 5 && level.columnHints.length === 5;
+    return generatedRowHints.length === 5 && generatedColHints.length === 5;
   }
 }
-

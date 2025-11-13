@@ -47,6 +47,40 @@ import { LevelService } from './services/level.service';
         </div>
 
         <!-- 遊戲說明 -->
+        <div class="story-premise" *ngIf="!selectedLevel">
+          <h3>故事背景 · ColorDance City</h3>
+          <p>
+            色彩城市被「去飽和霧」吞噬，路邊海報、空軌指示與星港訊號都失去了光彩。
+            你是最新任的「Color Conductor」，負責用記憶中的圖樣把城市的故事重新點亮。
+          </p>
+
+          <div class="story-arc-grid">
+            <div class="arc-card arc-dawn">
+              <div class="arc-icon">🌅</div>
+              <div>
+                <h4>篇章一：告示牆的晨光</h4>
+                <p>巡禮招募海報與笑臉面罩失色，居民需要新的晨光訊號。</p>
+              </div>
+            </div>
+            <div class="arc-connector"></div>
+            <div class="arc-card arc-rail">
+              <div class="arc-icon">🚝</div>
+              <div>
+                <h4>篇章二：浮空電車線</h4>
+                <p>空軌導光條與心跳信標黯淡，列車無法準時出發。</p>
+              </div>
+            </div>
+            <div class="arc-connector"></div>
+            <div class="arc-card arc-tower">
+              <div class="arc-icon">🛰️</div>
+              <div>
+                <h4>篇章三：星港訊號塔</h4>
+                <p>塔頂的箭羽、展示框與鑽石核心待你修復，才能升起終章光束。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="instructions" *ngIf="!selectedLevel">
           <h3>遊戲規則</h3>
           <ul>
@@ -113,6 +147,84 @@ import { LevelService } from './services/level.service';
 
     .content {
       margin-bottom: 30px;
+    }
+
+    .story-premise {
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.82), rgba(230, 244, 255, 0.88));
+      border-radius: 20px;
+      padding: 26px;
+      margin-bottom: 26px;
+      color: #1f2a44;
+      box-shadow: 0 22px 40px rgba(12, 32, 80, 0.18);
+    }
+
+    .story-premise h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #0e3c7e;
+      letter-spacing: 1px;
+    }
+
+    .story-premise p {
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .story-arc-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(40px, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+
+    .arc-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(14, 37, 66, 0.08);
+      border: 1px solid rgba(14, 60, 126, 0.18);
+      box-shadow: inset 0 0 12px rgba(14, 60, 126, 0.08);
+      height: 100%;
+    }
+
+    .arc-card h4 {
+      margin: 0 0 8px;
+      color: #1d4d85;
+    }
+
+    .arc-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #1f2a44;
+    }
+
+    .arc-icon {
+      font-size: 1.8rem;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+    }
+
+    .arc-card.arc-dawn {
+      background: linear-gradient(135deg, rgba(255, 248, 228, 0.9), rgba(255, 229, 210, 0.85));
+      border-color: rgba(255, 196, 140, 0.6);
+    }
+
+    .arc-card.arc-rail {
+      background: linear-gradient(135deg, rgba(216, 255, 244, 0.9), rgba(206, 236, 255, 0.85));
+      border-color: rgba(120, 246, 214, 0.6);
+    }
+
+    .arc-card.arc-tower {
+      background: linear-gradient(135deg, rgba(235, 225, 255, 0.9), rgba(212, 222, 255, 0.85));
+      border-color: rgba(172, 150, 255, 0.6);
+    }
+
+    .arc-connector {
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 196, 140, 0.6), rgba(120, 246, 214, 0.6), rgba(172, 150, 255, 0.6));
+      box-shadow: 0 6px 16px rgba(15, 32, 68, 0.15);
     }
 
     .back-button-container {
@@ -237,4 +349,3 @@ export class AppComponent {
     }
   }
 }
-

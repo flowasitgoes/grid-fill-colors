@@ -49,6 +49,7 @@ import { SfxEvent } from '../../models/sfx-event';
             [class.easy]="level.difficulty === 'easy'"
             [class.medium]="level.difficulty === 'medium'"
             [class.hard]="level.difficulty === 'hard'"
+            [ngClass]="getThemeClass(level)"
             (mouseenter)="onLevelHover()"
             (click)="onLevelSelect(level)">
             <div class="level-card-inner">
@@ -59,6 +60,14 @@ import { SfxEvent } from '../../models/sfx-event';
                   <div class="level-difficulty" *ngIf="level.difficulty">
                     {{ getDifficultyText(level.difficulty) }}
                   </div>
+                </div>
+              </div>
+
+              <div class="story-banner" *ngIf="level.story">
+                <span class="banner-icon">{{ level.story.sigil || getThemeFallbackIcon(level.story.theme) }}</span>
+                <div class="banner-text">
+                  <span class="banner-arc">{{ level.story.arc }}</span>
+                  <span class="banner-location">{{ level.story.location }}</span>
                 </div>
               </div>
 
@@ -82,6 +91,16 @@ import { SfxEvent } from '../../models/sfx-event';
                   class="palette-dot"
                   [style.background-color]="getColorValue(color)">
                 </span>
+              </div>
+
+              <div class="level-story" *ngIf="level.story">
+                <span class="story-arc">{{ level.story.arc }}</span>
+                <div class="story-location">{{ level.story.location }}</div>
+                <p class="story-briefing">{{ level.story.briefing }}</p>
+                <div class="story-objective">🎯 {{ level.story.objective }}</div>
+                <div class="story-mood" *ngIf="level.story.mood">
+                  <span>氛圍：</span>{{ level.story.mood }}
+                </div>
               </div>
             </div>
           </div>
@@ -251,6 +270,24 @@ import { SfxEvent } from '../../models/sfx-event';
       overflow: hidden;
     }
 
+    .level-card.theme-dawn {
+      border-color: rgba(255, 210, 130, 0.45);
+      background: linear-gradient(160deg, rgba(44, 22, 52, 0.9), rgba(20, 30, 66, 0.85));
+      box-shadow: 0 20px 44px rgba(255, 182, 99, 0.22), inset 0 0 30px rgba(255, 200, 150, 0.18);
+    }
+
+    .level-card.theme-rail {
+      border-color: rgba(126, 255, 214, 0.35);
+      background: linear-gradient(160deg, rgba(10, 32, 40, 0.9), rgba(9, 20, 34, 0.95));
+      box-shadow: 0 20px 44px rgba(71, 196, 255, 0.18), inset 0 0 30px rgba(105, 255, 224, 0.16);
+    }
+
+    .level-card.theme-tower {
+      border-color: rgba(151, 120, 255, 0.4);
+      background: linear-gradient(160deg, rgba(18, 12, 34, 0.92), rgba(12, 10, 28, 0.95));
+      box-shadow: 0 20px 44px rgba(130, 92, 255, 0.22), inset 0 0 30px rgba(96, 64, 196, 0.2);
+    }
+
     .level-card::before {
       content: '';
       position: absolute;
@@ -265,6 +302,55 @@ import { SfxEvent } from '../../models/sfx-event';
       transform: rotate(0deg);
       transition: transform 0.6s ease;
       pointer-events: none;
+    }
+
+    .story-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 18px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .theme-dawn .story-banner {
+      background: rgba(255, 208, 143, 0.1);
+      border-color: rgba(255, 208, 143, 0.4);
+    }
+
+    .theme-rail .story-banner {
+      background: rgba(111, 255, 228, 0.08);
+      border-color: rgba(111, 255, 228, 0.35);
+    }
+
+    .theme-tower .story-banner {
+      background: rgba(166, 148, 255, 0.1);
+      border-color: rgba(166, 148, 255, 0.35);
+    }
+
+    .banner-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+    }
+
+    .banner-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+
+    .banner-arc {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .banner-location {
+      font-size: 0.95rem;
+      color: #f8f9ff;
     }
 
     .level-card:hover {
@@ -378,6 +464,64 @@ import { SfxEvent } from '../../models/sfx-event';
       border-radius: 50%;
       border: 3px solid rgba(240, 250, 255, 0.4);
       box-shadow: 0 0 12px rgba(240, 250, 255, 0.45);
+    }
+
+    .level-story {
+      margin-top: 4px;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(17, 27, 52, 0.8), rgba(35, 19, 60, 0.72));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .theme-dawn .level-story {
+      background: linear-gradient(145deg, rgba(68, 42, 62, 0.85), rgba(36, 27, 64, 0.75));
+      border-color: rgba(255, 214, 153, 0.4);
+    }
+
+    .theme-rail .level-story {
+      background: linear-gradient(145deg, rgba(20, 40, 54, 0.85), rgba(14, 32, 44, 0.8));
+      border-color: rgba(111, 255, 228, 0.35);
+    }
+
+    .theme-tower .level-story {
+      background: linear-gradient(145deg, rgba(32, 22, 60, 0.85), rgba(18, 16, 44, 0.85));
+      border-color: rgba(168, 146, 255, 0.35);
+    }
+
+    .story-arc {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(111, 219, 255, 0.85);
+    }
+
+    .story-location {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 6px 0;
+      color: #f5f7ff;
+    }
+
+    .story-briefing {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: rgba(226, 233, 255, 0.78);
+      margin-bottom: 6px;
+    }
+
+    .story-objective {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffd86b;
+      margin-bottom: 4px;
+    }
+
+    .story-mood {
+      font-size: 0.85rem;
+      color: rgba(196, 207, 255, 0.85);
     }
 
     @keyframes drift {
@@ -506,6 +650,22 @@ export class LevelSelectorComponent implements OnInit, AfterViewInit, OnDestroy 
     return colorMap[colorName] || colorName;
   }
 
+  getThemeClass(level: Level): string {
+    const theme = level.story?.theme ?? 'dawn';
+    return `theme-${theme}`;
+  }
+
+  getThemeFallbackIcon(theme?: string): string {
+    switch (theme) {
+      case 'rail':
+        return '🚝';
+      case 'tower':
+        return '🛰️';
+      default:
+        return '🌅';
+    }
+  }
+
   private tryPlayAudio(audio: HTMLAudioElement): void {
     audio
       .play()
@@ -546,4 +706,3 @@ export class LevelSelectorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.detachResumePlaybackHandler();
   }
 }
-

@@ -51,6 +51,30 @@ import { Subscription } from 'rxjs';
             </span>
           </div>
         </div>
+
+        <section
+          class="story-spotlight"
+          *ngIf="currentLevel.story"
+          [ngClass]="getStoryThemeClass(currentLevel)"
+        >
+          <div class="story-arc">
+            <span class="story-icon">{{ getStorySigil(currentLevel) }}</span>
+            {{ currentLevel.story?.arc }}
+          </div>
+          <div class="story-location">
+            <span>場景：</span>{{ currentLevel.story.location }}
+          </div>
+          <p class="story-briefing">{{ currentLevel.story.briefing }}</p>
+          <div class="story-artifact" *ngIf="currentLevel.story.artifact">
+            <span>道具：</span>{{ currentLevel.story.artifact }}
+          </div>
+          <div class="story-objective">
+            🎯 任務：{{ currentLevel.story.objective }}
+          </div>
+          <div class="story-mood" *ngIf="currentLevel.story.mood">
+            <span>氛圍：</span>{{ currentLevel.story.mood }}
+          </div>
+        </section>
       </div>
 
       <div class="game-area">
@@ -252,6 +276,75 @@ import { Subscription } from 'rxjs';
     .color-sample.eraser {
       background-color: white;
       border: 3px dashed var(--color-border);
+    }
+
+    .story-spotlight {
+      margin: 22px auto 0;
+      max-width: 540px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(226, 240, 255, 0.9));
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.15);
+      text-align: left;
+      color: #1e2a44;
+    }
+
+    .story-spotlight .story-arc {
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: #5c6ac4;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-spotlight .story-icon {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+    }
+
+    .story-spotlight .story-location {
+      font-weight: 600;
+      margin: 6px 0;
+    }
+
+    .story-spotlight .story-briefing {
+      margin: 0 0 8px;
+      color: #445;
+      line-height: 1.5;
+    }
+
+    .story-spotlight .story-artifact {
+      font-size: 0.92rem;
+      color: #2c3e50;
+      margin-bottom: 6px;
+    }
+
+    .story-spotlight .story-objective {
+      font-weight: 600;
+      color: #d35400;
+      margin-bottom: 4px;
+    }
+
+    .story-spotlight .story-mood {
+      font-size: 0.85rem;
+      color: #5d6d7e;
+    }
+
+    .story-spotlight.theme-dawn {
+      background: linear-gradient(140deg, rgba(255, 243, 220, 0.95), rgba(232, 219, 255, 0.92));
+      box-shadow: 0 20px 40px rgba(255, 194, 132, 0.2);
+    }
+
+    .story-spotlight.theme-rail {
+      background: linear-gradient(140deg, rgba(216, 255, 248, 0.95), rgba(208, 236, 255, 0.94));
+      box-shadow: 0 20px 40px rgba(111, 255, 228, 0.2);
+    }
+
+    .story-spotlight.theme-tower {
+      background: linear-gradient(140deg, rgba(234, 225, 255, 0.95), rgba(210, 224, 255, 0.94));
+      box-shadow: 0 20px 40px rgba(158, 138, 255, 0.22);
     }
 
     .game-area {
@@ -1022,5 +1115,25 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       });
     }
   }
-}
 
+  getStoryThemeClass(level?: Level | null): string {
+    const theme = level?.story?.theme ?? 'dawn';
+    return `theme-${theme}`;
+  }
+
+  getStorySigil(level?: Level | null): string {
+    const theme = level?.story?.theme;
+    return level?.story?.sigil || this.getThemeIcon(theme);
+  }
+
+  private getThemeIcon(theme?: string): string {
+    switch (theme) {
+      case 'rail':
+        return '🚝';
+      case 'tower':
+        return '🛰️';
+      default:
+        return '🌅';
+    }
+  }
+}
