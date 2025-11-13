@@ -169,6 +169,8 @@ import { Subscription } from 'rxjs';
       border-radius: 24px;
       padding: 48px 60px 54px;
       box-shadow: 0 28px 72px rgba(0,0,0,0.4);
+      /* iOS 16.2 兼容性：添加 -webkit- 前缀 */
+      -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
     }
 
@@ -235,7 +237,11 @@ import { Subscription } from 'rxjs';
     .color-sample::after {
       content: '';
       position: absolute;
-      inset: -40%;
+      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
+      top: -40%;
+      right: -40%;
+      bottom: -40%;
+      left: -40%;
       background: radial-gradient(circle at center, rgba(255,255,255,0.3), transparent 60%);
       opacity: 0;
       transform: scale(0.4);
@@ -271,7 +277,11 @@ import { Subscription } from 'rxjs';
     .game-area::before {
       content: '';
       position: absolute;
-      inset: -60px -120px;
+      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
+      top: -60px;
+      right: -120px;
+      bottom: -60px;
+      left: -120px;
       background:
         radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.45), transparent 55%),
         radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.4), transparent 55%),
@@ -430,7 +440,11 @@ import { Subscription } from 'rxjs';
 
     .victory-hold {
       position: fixed;
-      inset: 0;
+      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -582,7 +596,11 @@ import { Subscription } from 'rxjs';
 
     .stage-lights {
       position: absolute;
-      inset: -160px -120px;
+      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
+      top: -160px;
+      right: -120px;
+      bottom: -160px;
+      left: -120px;
       pointer-events: none;
       z-index: 1;
     }

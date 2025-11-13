@@ -43,7 +43,11 @@ import { CommonModule } from '@angular/common';
     .cell::after {
       content: '';
       position: absolute;
-      inset: -30%;
+      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
+      top: -30%;
+      right: -30%;
+      bottom: -30%;
+      left: -30%;
       background: radial-gradient(circle at center, var(--cell-glow-color, rgba(255,255,255,0.35)) 0%, transparent 60%);
       opacity: 0;
       transform: scale(0.6);
