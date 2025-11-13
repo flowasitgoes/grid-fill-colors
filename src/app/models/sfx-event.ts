@@ -5,6 +5,7 @@ export enum SfxEvent {
   UiChooseAndClick = 'ui.choose.click',
   UiHover = 'ui.hover',
   UiAlertIncomplete = 'ui.alert.incomplete',
+  UiCountdown = 'ui.countdown',
 
   GameFillBasic = 'game.fill.basic',
   GameFillStreak = 'game.fill.streak',
@@ -21,5 +22,6 @@ export enum SfxEvent {
 
   EnvLoadingBubbles = 'env.loading.bubbles',
   EnvLevelAtmos = 'env.level.atmos',
+  EnvCountdownBg = 'env.countdown.bg',
 }
 

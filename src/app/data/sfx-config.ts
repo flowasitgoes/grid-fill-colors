@@ -40,6 +40,11 @@ export const SFX_CONFIG: Record<SfxEvent, SfxConfigEntry> = {
     group: 'ui',
     volume: 0.85,
   },
+  [SfxEvent.UiCountdown]: {
+    files: ['assets/audio/ui/softer-bell-count-single.mp3'],
+    group: 'ui',
+    volume: 1.2,
+  },
   [SfxEvent.GameFillBasic]: {
     files: ['assets/audio/gameplay/fill_basic_paint.mp3'],
     group: 'sfx',
@@ -95,9 +100,14 @@ export const SFX_CONFIG: Record<SfxEvent, SfxConfigEntry> = {
     volume: 0.45,
   },
   [SfxEvent.EnvLevelAtmos]: {
-    files: ['assets/audio/env/level_atmos_loop.mp3'],
+    files: ['assets/audio/env/level_atmos_loop_normalized.mp3'],
     group: 'env',
-    volume: 0.5,
+    volume: 0.7,
+  },
+  [SfxEvent.EnvCountdownBg]: {
+    files: ['assets/audio/ui/counting-bg-music-loop.mp3'],
+    group: 'env',
+    volume: 0.65,
   },
 };
 

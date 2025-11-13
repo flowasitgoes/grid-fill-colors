@@ -77,20 +77,28 @@ import { Subscription } from 'rxjs';
         </section>
       </div>
 
-      <div class="game-area">
-        <!-- 参考答案 -->
-        <div class="reference-section">
-          <h3>參考圖案</h3>
-          <div class="reference-grid">
-            <div *ngFor="let row of currentLevel.solution; let r = index" class="reference-row">
-              <div 
-                *ngFor="let color of row; let c = index" 
-                class="reference-cell"
-                [style.background-color]="getColorValue(color)">
+      <!-- 倒计时遮罩 -->
+      <div class="countdown-overlay" *ngIf="countdown > 0">
+        <div class="countdown-content">
+          <!-- 参考答案显示在倒计时上方 -->
+          <div class="reference-section" *ngIf="showReference">
+            <h3>參考圖案</h3>
+            <div class="reference-grid">
+              <div *ngFor="let row of currentLevel.solution; let r = index" class="reference-row">
+                <div 
+                  *ngFor="let color of row; let c = index" 
+                  class="reference-cell"
+                  [style.background-color]="getColorValue(color)">
+                </div>
               </div>
             </div>
           </div>
+          <div class="countdown-number">{{ countdown }}</div>
+          <div class="countdown-text">準備開始</div>
         </div>
+      </div>
+
+      <div class="game-area">
 
         <!-- 游戏网格 -->
         <div
@@ -381,7 +389,8 @@ import { Subscription } from 'rxjs';
       align-items: center;
       gap: 10px;
       position: relative;
-      z-index: 3;
+      z-index: 1001;
+      transition: opacity 0.3s ease;
     }
 
     .reference-section h3 {
@@ -393,14 +402,97 @@ import { Subscription } from 'rxjs';
       z-index: 3;
     }
 
+    .countdown-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      animation: countdownFadeIn 0.3s ease;
+      pointer-events: none;
+    }
+
+    .countdown-content {
+      text-align: center;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .countdown-content .reference-section {
+      z-index: 1002;
+      margin-bottom: 20px;
+    }
+
+    .countdown-content .reference-section h3 {
+      color: #ffffff;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+
+    .countdown-content .reference-grid {
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
+                  0 0 60px rgba(102, 126, 234, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .countdown-number {
+      font-size: 8rem;
+      font-weight: bold;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.8),
+                   0 0 80px rgba(102, 126, 234, 0.6);
+      animation: countdownPulse 0.8s ease-out;
+      background: linear-gradient(135deg, #ffffff 0%, #93dfff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .countdown-text {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes countdownFadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes countdownPulse {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
     .reference-grid {
       background: #f8f9fa;
       padding: 10px;
       border-radius: 8px;
       border: 2px solid #ddd;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
       position: relative;
-      z-index: 3;
+      z-index: 1001;
     }
 
     .reference-row {
@@ -821,7 +913,11 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   canGoNextLevel = false;
   showSummaryOverlay = false;
   showVictoryHold = false;
+  countdown: number = 0;  // 倒计时数字
+  showReference: boolean = false;  // 是否显示参考答案
   private checkPulseTimeout: ReturnType<typeof setTimeout> | null = null;
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
+  private referenceHideTimeout: ReturnType<typeof setTimeout> | null = null;
   private victoryTriggeredByCheckButton = false;
   private subscriptions = new Subscription();
 
@@ -891,8 +987,17 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       clearTimeout(this.checkPulseTimeout);
       this.checkPulseTimeout = null;
     }
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+    if (this.referenceHideTimeout) {
+      clearTimeout(this.referenceHideTimeout);
+      this.referenceHideTimeout = null;
+    }
     this.subscriptions.unsubscribe();
     this.feedbackService.stopLoop(SfxEvent.EnvLevelAtmos);
+    this.feedbackService.stopLoop(SfxEvent.EnvCountdownBg);
   }
 
   /**
@@ -1053,9 +1158,21 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private initializeLevel(level: Level): void {
+    // 清理之前的定时器
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
+    if (this.referenceHideTimeout) {
+      clearTimeout(this.referenceHideTimeout);
+      this.referenceHideTimeout = null;
+    }
+    
+    // 停止倒计时背景音乐（如果正在播放）
+    this.feedbackService.stopLoop(SfxEvent.EnvCountdownBg);
+
     this.currentLevel = level;
     this.gameService.initGame(level);
-    this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
     this.gameCompleted = false;
     this.gameWon = false;
     this.gameSummary = null;
@@ -1064,12 +1181,60 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
     this.checkPulseState = null;
     this.victoryTriggeredByCheckButton = false;
     this.canGoNextLevel = this.levelService.hasNextLevel(level.id);
+    this.showReference = false;
+    
     if (level.colors && level.colors.length > 0) {
       this.selectedColor = level.colors[0];
     } else {
       this.selectedColor = '';
     }
     this.triggerCheckPulse(null);
+
+    // 启动倒计时
+    this.startCountdown();
+  }
+
+  /**
+   * 启动倒计时并显示参考答案
+   */
+  private startCountdown(): void {
+    this.countdown = 6;  // 从6开始
+    this.showReference = true;
+    
+    // 播放倒计时背景音乐
+    this.feedbackService.playLoop(SfxEvent.EnvCountdownBg);
+    
+    // 第1秒（6→5）不播放 countdown 音效，只显示数字变化
+
+    this.countdownInterval = setInterval(() => {
+      this.countdown--;
+      
+      if (this.countdown > 1) {
+        // 从第2秒开始（5, 4, 3, 2）播放倒计时音效
+        // 音调随数字变化逐渐下降，模仿原文件的音阶变化
+        const remaining = this.countdown;
+        // 5, 4, 3, 2 对应音调：1.15, 1.11, 1.07, 1.03
+        const pitch = 1.15 - (5 - remaining) * 0.04;
+        this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: pitch });
+      } else if (this.countdown === 1) {
+        // 数字1，播放最后一个倒计时音效
+        this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: 0.99 });
+      } else {
+        // 倒计时结束（countdown === 0），播放开始音效
+        if (this.countdownInterval) {
+          clearInterval(this.countdownInterval);
+          this.countdownInterval = null;
+        }
+        
+        // 停止倒计时背景音乐
+        this.feedbackService.stopLoop(SfxEvent.EnvCountdownBg);
+        
+        // 播放开始音效（使用更高的音调表示开始）
+        this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: 1.3 });
+        this.showReference = false;
+        this.feedbackService.playLoop(SfxEvent.EnvLevelAtmos);
+      }
+    }, 1000);
   }
 
   private triggerCheckPulse(state: 'success' | 'failure' | 'incomplete' | null): void {
