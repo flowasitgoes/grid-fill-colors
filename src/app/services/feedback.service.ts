@@ -212,7 +212,6 @@ export class FeedbackService {
       return undefined;
     }
 
-    // iOS 16.2 兼容性：使用 webkitAudioContext 作为 fallback
     const anyWindow = window as typeof window & { webkitAudioContext?: typeof AudioContext };
     const Ctor = window.AudioContext || anyWindow.webkitAudioContext;
 
@@ -220,22 +219,9 @@ export class FeedbackService {
       return undefined;
     }
 
-    try {
-      // iOS 上 AudioContext 可能需要特定的配置
-      const options: AudioContextOptions = {};
-      // 对于 iOS，使用较小的 sampleRate 可以提高性能
-      if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-        options.sampleRate = 44100;
-      }
-      
-      this.audioContext = new Ctor(options);
-      this.setupContextRecovery(this.audioContext);
-      return this.audioContext;
-    } catch (error) {
-      // 如果创建失败，返回 undefined，避免阻塞应用
-      console.warn('AudioContext creation failed:', error);
-      return undefined;
-    }
+    this.audioContext = new Ctor();
+    this.setupContextRecovery(this.audioContext);
+    return this.audioContext;
   }
 
   private getMasterGain(context: AudioContext): GainNode {
@@ -309,39 +295,15 @@ export class FeedbackService {
       return Promise.resolve(null);
     }
 
-    // iOS 16.2 兼容性：添加超时和错误处理，避免阻塞
-    const abortController = new AbortController();
-    const timeoutId = window.setTimeout(() => {
-      abortController.abort();
-    }, 10000); // 10秒超时
-    
-    const promise = fetch(path, { 
-      // iOS 上添加缓存控制
-      cache: 'default',
-      // 添加超时处理
-      signal: abortController.signal
-    } as RequestInit)
-      .then(response => {
-        window.clearTimeout(timeoutId);
-        if (!response.ok) {
-          throw new Error(`Failed to load audio: ${response.statusText}`);
-        }
-        return response.arrayBuffer();
-      })
-      .then(arrayBuffer => {
-        // iOS 上 decodeAudioData 可能需要更多时间，添加错误处理
-        return context.decodeAudioData(arrayBuffer.slice(0));
-      })
+    const promise = fetch(path)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
       .then(buffer => {
         this.bufferCache.set(path, buffer);
         this.bufferPromises.delete(path);
         return buffer;
       })
-      .catch((error) => {
-        // 清理超时
-        window.clearTimeout(timeoutId);
-        // 静默处理错误，避免阻塞应用
-        console.warn(`Failed to load audio buffer: ${path}`, error);
+      .catch(() => {
         this.bufferPromises.delete(path);
         return null;
       });

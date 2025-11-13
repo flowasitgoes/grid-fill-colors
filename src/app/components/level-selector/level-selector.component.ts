@@ -110,11 +110,7 @@ import { SfxEvent } from '../../models/sfx-event';
 
     .cosmic-backdrop {
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       pointer-events: none;
       display: flex;
       justify-content: center;
@@ -195,11 +191,7 @@ import { SfxEvent } from '../../models/sfx-event';
 
     .stardust {
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       background-image:
         radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.9) 50%, transparent 52%),
         radial-gradient(1px 1px at 40% 70%, rgba(166, 233, 255, 0.8) 50%, transparent 53%),
@@ -262,30 +254,14 @@ import { SfxEvent } from '../../models/sfx-event';
     .level-card::before {
       content: '';
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: -40%;
-      right: -40%;
-      bottom: -40%;
-      left: -40%;
-      /* 使用 linear-gradient 作为 fallback，iOS 16.2 对 conic-gradient 支持不完整 */
-      background: linear-gradient(
-        120deg,
-        rgba(123, 77, 255, 0.08) 0%,
-        rgba(0, 0, 0, 0) 25%,
-        rgba(74, 242, 182, 0.12) 50%,
-        rgba(0, 0, 0, 0) 75%,
-        rgba(123, 77, 255, 0.08) 100%
+      inset: -40%;
+      background: conic-gradient(
+        from 120deg,
+        rgba(123, 77, 255, 0.08),
+        rgba(0, 0, 0, 0),
+        rgba(74, 242, 182, 0.12),
+        rgba(0, 0, 0, 0)
       );
-      /* 如果支持 conic-gradient，则使用它 */
-      @supports (background: conic-gradient(from 0deg, red, blue)) {
-        background: conic-gradient(
-          from 120deg,
-          rgba(123, 77, 255, 0.08),
-          rgba(0, 0, 0, 0),
-          rgba(74, 242, 182, 0.12),
-          rgba(0, 0, 0, 0)
-        );
-      }
       transform: rotate(0deg);
       transition: transform 0.6s ease;
       pointer-events: none;

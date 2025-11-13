@@ -77,11 +77,7 @@ import { LevelService } from './services/level.service';
     .app-container::before {
       content: '';
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       background:
         radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.18), transparent 55%),
         radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.14), transparent 60%),
@@ -151,13 +147,7 @@ import { LevelService } from './services/level.service';
       text-align: left;
       color: rgba(230, 244, 255, 0.9);
       box-shadow: inset 0 0 30px rgba(0, 26, 68, 0.35);
-      /* iOS 16.2 兼容性：添加 -webkit- 前缀，并增加背景不透明度作为 fallback */
-      -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
-      /* 如果 backdrop-filter 不支持，增加背景不透明度 */
-      @supports not (backdrop-filter: blur(6px)) {
-        background: linear-gradient(145deg, rgba(8, 40, 88, 0.85), rgba(20, 88, 150, 0.75));
-      }
     }
 
     .instructions h3 {

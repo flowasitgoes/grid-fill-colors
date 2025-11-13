@@ -156,17 +156,11 @@ import { SfxEvent } from '../../models/sfx-event';
       text-align: center;
       padding: 24px;
       border-radius: 36px;
-      /* iOS 16.2 兼容性：添加 -webkit- 前缀，并增加背景不透明度作为 fallback */
-      -webkit-backdrop-filter: blur(18px);
       backdrop-filter: blur(18px);
       background: rgba(255, 255, 255, 0.72);
       box-shadow: 0 30px 60px rgba(31, 42, 68, 0.16);
       position: relative;
       z-index: 1;
-      /* 如果 backdrop-filter 不支持，增加背景不透明度 */
-      @supports not (backdrop-filter: blur(18px)) {
-        background: rgba(255, 255, 255, 0.92);
-      }
     }
 
     .landing__logo-wrapper {
@@ -282,11 +276,7 @@ import { SfxEvent } from '../../models/sfx-event';
 
     .loading-overlay {
       position: fixed;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       background: rgba(22, 32, 54, 0.75);
       display: flex;
       justify-content: center;

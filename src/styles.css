@@ -17,50 +17,35 @@
 
 body {
   font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* 使用 linear-gradient 作为 fallback，iOS 16.2 对 conic-gradient 支持不完整 */
-  background: linear-gradient(
-    135deg,
-    rgb(119, 171, 220) 0%,
-    rgb(99, 187, 220) 14%,
-    rgb(88, 204, 210) 28%,
-    rgb(89, 219, 193) 42%,
-    rgb(101, 228, 172) 56%,
-    rgb(122, 230, 149) 70%,
-    rgb(149, 224, 129) 84%,
-    rgb(177, 212, 116) 100%
+  background: conic-gradient(
+    from 45deg,
+    rgb(119, 171, 220) 0deg,
+    rgb(119, 171, 220) 27.692deg,
+    rgb(99, 187, 220) 27.692deg,
+    rgb(99, 187, 220) 55.385deg,
+    rgb(88, 204, 210) 55.385deg,
+    rgb(88, 204, 210) 83.077deg,
+    rgb(89, 219, 193) 83.077deg,
+    rgb(89, 219, 193) 110.769deg,
+    rgb(101, 228, 172) 110.769deg,
+    rgb(101, 228, 172) 138.462deg,
+    rgb(122, 230, 149) 138.462deg,
+    rgb(122, 230, 149) 166.154deg,
+    rgb(149, 224, 129) 166.154deg,
+    rgb(149, 224, 129) 193.846deg,
+    rgb(177, 212, 116) 193.846deg,
+    rgb(177, 212, 116) 221.538deg,
+    rgb(202, 195, 111) 221.538deg,
+    rgb(202, 195, 111) 249.231deg,
+    rgb(219, 178, 115) 249.231deg,
+    rgb(219, 178, 115) 276.923deg,
+    rgb(225, 165, 129) 276.923deg,
+    rgb(225, 165, 129) 304.615deg,
+    rgb(220, 156, 148) 304.615deg,
+    rgb(220, 156, 148) 332.308deg,
+    rgb(205, 156, 171) 332.308deg,
+    rgb(205, 156, 171) 360deg
   );
-  /* 如果支持 conic-gradient，则使用它 */
-  @supports (background: conic-gradient(from 0deg, red, blue)) {
-    background: conic-gradient(
-      from 45deg,
-      rgb(119, 171, 220) 0deg,
-      rgb(119, 171, 220) 27.692deg,
-      rgb(99, 187, 220) 27.692deg,
-      rgb(99, 187, 220) 55.385deg,
-      rgb(88, 204, 210) 55.385deg,
-      rgb(88, 204, 210) 83.077deg,
-      rgb(89, 219, 193) 83.077deg,
-      rgb(89, 219, 193) 110.769deg,
-      rgb(101, 228, 172) 110.769deg,
-      rgb(101, 228, 172) 138.462deg,
-      rgb(122, 230, 149) 138.462deg,
-      rgb(122, 230, 149) 166.154deg,
-      rgb(149, 224, 129) 166.154deg,
-      rgb(149, 224, 129) 193.846deg,
-      rgb(177, 212, 116) 193.846deg,
-      rgb(177, 212, 116) 221.538deg,
-      rgb(202, 195, 111) 221.538deg,
-      rgb(202, 195, 111) 249.231deg,
-      rgb(219, 178, 115) 249.231deg,
-      rgb(219, 178, 115) 276.923deg,
-      rgb(225, 165, 129) 276.923deg,
-      rgb(225, 165, 129) 304.615deg,
-      rgb(220, 156, 148) 304.615deg,
-      rgb(220, 156, 148) 332.308deg,
-      rgb(205, 156, 171) 332.308deg,
-      rgb(205, 156, 171) 360deg
-    );
-  }
   min-height: 100vh;
   color: #1f2a44;
 }

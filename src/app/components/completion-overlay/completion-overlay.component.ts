@@ -98,29 +98,19 @@ interface StatItem {
 
     .completion-overlay {
       position: fixed;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: clamp(20px, 5vh, 48px) clamp(16px, 4vw, 32px);
       z-index: 999;
-      /* iOS 16.2 兼容性：添加 -webkit- 前缀 */
-      -webkit-backdrop-filter: blur(4px);
       backdrop-filter: blur(4px);
       overflow-y: auto;
     }
 
     .completion-overlay__backdrop {
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       background: linear-gradient(160deg, rgba(8, 16, 48, 0.86), rgba(12, 24, 68, 0.8));
       opacity: 0.92;
     }
@@ -145,11 +135,7 @@ interface StatItem {
     .completion-overlay__card::after {
       content: '';
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: -40%;
-      right: -40%;
-      bottom: -40%;
-      left: -40%;
+      inset: -40%;
       background: radial-gradient(circle at top, rgba(122, 109, 255, 0.25), transparent 65%);
       pointer-events: none;
     }
@@ -179,11 +165,7 @@ interface StatItem {
 
     .completion-overlay__glow {
       position: absolute;
-      /* iOS 16.2 兼容性：使用 top/right/bottom/left 替代 inset */
-      top: -20%;
-      right: -20%;
-      bottom: -20%;
-      left: -20%;
+      inset: -20%;
       background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25), transparent 70%);
       opacity: 0.5;
       pointer-events: none;
