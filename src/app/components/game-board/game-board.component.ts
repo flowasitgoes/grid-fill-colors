@@ -1211,14 +1211,14 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
       
       if (this.countdown > 1) {
         // 从第2秒开始（5, 4, 3, 2）播放倒计时音效
-        // 音调随数字变化逐渐上升：从低到高
+        // 音调随数字变化逐渐下降，模仿原文件的音阶变化
         const remaining = this.countdown;
-        // 5, 4, 3, 2 对应音调：0.95, 0.99, 1.03, 1.07（从低到高）
-        const pitch = 0.95 + (5 - remaining) * 0.04;
+        // 5, 4, 3, 2 对应音调：1.15, 1.11, 1.07, 1.03
+        const pitch = 1.15 - (5 - remaining) * 0.04;
         this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: pitch });
       } else if (this.countdown === 1) {
-        // 数字1，播放最后一个倒计时音效（最高音调）
-        this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: 1.11 });
+        // 数字1，播放最后一个倒计时音效
+        this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: 0.99 });
       } else {
         // 倒计时结束（countdown === 0），播放开始音效
         if (this.countdownInterval) {
