@@ -59,7 +59,7 @@ import { Subscription } from 'rxjs';
         >
           <div class="story-arc">
             <span class="story-icon">{{ getStorySigil(currentLevel) }}</span>
-            {{ currentLevel.story?.arc }}
+            {{ currentLevel.story.arc }}
           </div>
           <div class="story-location">
             <span>場景：</span>{{ currentLevel.story.location }}
@@ -134,7 +134,24 @@ import { Subscription } from 'rxjs';
         </button>
         <button class="btn btn-primary" (click)="onCheckAnswer()">檢查答案</button>
         <button class="btn btn-secondary" (click)="onReset()">重置</button>
-        <button class="btn btn-hint" (click)="onGetHint()">提示</button>
+        <button 
+          class="btn btn-hint" 
+          (click)="onGetHint()"
+          [disabled]="hintRemaining === 0"
+          [attr.aria-disabled]="hintRemaining === 0">
+          <span class="hint-button-content">
+            <span>提示</span>
+            <span class="hint-hearts">
+              <span 
+                class="hint-heart" 
+                *ngFor="let i of [0, 1]; let idx = index"
+                [class.used]="idx >= hintRemaining"
+                [class.removing]="removingHeartIndex === idx">
+                ❤️
+              </span>
+            </span>
+          </span>
+        </button>
         <button
           *ngIf="postVictoryControlsVisible"
           type="button"
@@ -247,8 +264,20 @@ import { Subscription } from 'rxjs';
       color: #666;
       position: relative;
       overflow: hidden;
-      background-image: linear-gradient(145deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.18);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), inset 0 -1px 2px rgba(0,0,0,0.1);
+    }
+
+    .color-sample::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 8px 8px 0 0;
     }
 
     .color-sample:hover {
@@ -261,7 +290,10 @@ import { Subscription } from 'rxjs';
       box-shadow: 0 0 18px rgba(102, 126, 234, 0.45);
       transform: scale(1.08);
       animation: colorGlow 600ms ease;
-      background-image: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+    }
+
+    .color-sample.selected::before {
+      background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
     }
 
     .color-sample::after {
@@ -273,6 +305,7 @@ import { Subscription } from 'rxjs';
       transform: scale(0.4);
       transition: opacity 0.35s ease, transform 0.35s ease;
       pointer-events: none;
+      z-index: 2;
     }
 
     .color-sample:hover::after,
@@ -581,6 +614,64 @@ import { Subscription } from 'rxjs';
     .btn-hint {
       background: #f39c12;
       color: white;
+      position: relative;
+      overflow: visible;
+    }
+
+    .btn-hint:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #95a5a6;
+    }
+
+    .btn-hint:disabled:hover {
+      transform: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hint-button-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hint-hearts {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .hint-heart {
+      display: inline-block;
+      font-size: 16px;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .hint-heart.used {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+    }
+
+    .hint-heart.removing {
+      animation: heartDisappear 0.6s ease-out forwards;
+    }
+
+    @keyframes heartDisappear {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.3) translateY(-10px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0) translateY(-20px);
+      }
     }
 
     .btn--secondary {
@@ -915,6 +1006,8 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
   showVictoryHold = false;
   countdown: number = 0;  // 倒计时数字
   showReference: boolean = false;  // 是否显示参考答案
+  hintRemaining: number = 2;  // 剩余提示次数
+  removingHeartIndex: number | null = null;  // 正在移除的爱心索引
   private checkPulseTimeout: ReturnType<typeof setTimeout> | null = null;
   private countdownInterval: ReturnType<typeof setInterval> | null = null;
   private referenceHideTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -1082,11 +1175,29 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
    * 获取提示
    */
   onGetHint(): void {
+    // 检查是否还有提示次数
+    if (this.hintRemaining === 0) {
+      return;
+    }
+
     this.feedbackService.playEvent(SfxEvent.UiClick);
     const hint = this.gameService.getHint();
     if (hint) {
       // 提示已自動填充，無需額外操作
       this.feedbackService.playEvent(SfxEvent.GameHintSuccess);
+      
+      // 确定要消失的爱心索引（从右到左，即从索引大的开始）
+      const heartToRemove = this.hintRemaining - 1;
+      this.removingHeartIndex = heartToRemove;
+      
+      // 触发动画后减少次数
+      setTimeout(() => {
+        this.hintRemaining -= 1;
+        // 动画结束后重置标志
+        setTimeout(() => {
+          this.removingHeartIndex = null;
+        }, 600);
+      }, 0);
     } else {
       alert('恭喜！所有格子都正確了！');
     }
@@ -1182,6 +1293,8 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
     this.victoryTriggeredByCheckButton = false;
     this.canGoNextLevel = this.levelService.hasNextLevel(level.id);
     this.showReference = false;
+    this.hintRemaining = 2;  // 重置提示次数
+    this.removingHeartIndex = null;  // 重置动画标志
     
     if (level.colors && level.colors.length > 0) {
       this.selectedColor = level.colors[0];
@@ -1198,23 +1311,23 @@ export class GameBoardComponent implements OnInit, OnDestroy, OnChanges {
    * 启动倒计时并显示参考答案
    */
   private startCountdown(): void {
-    this.countdown = 6;  // 从6开始
+    this.countdown = 5;  // 从5开始
     this.showReference = true;
     
     // 播放倒计时背景音乐
     this.feedbackService.playLoop(SfxEvent.EnvCountdownBg);
     
-    // 第1秒（6→5）不播放 countdown 音效，只显示数字变化
+    // 第1秒（5→4）不播放 countdown 音效，只显示数字变化
 
     this.countdownInterval = setInterval(() => {
       this.countdown--;
       
       if (this.countdown > 1) {
-        // 从第2秒开始（5, 4, 3, 2）播放倒计时音效
+        // 从第2秒开始（4, 3, 2）播放倒计时音效
         // 音调随数字变化逐渐下降，模仿原文件的音阶变化
         const remaining = this.countdown;
-        // 5, 4, 3, 2 对应音调：1.15, 1.11, 1.07, 1.03
-        const pitch = 1.15 - (5 - remaining) * 0.04;
+        // 4, 3, 2 对应音调：1.11, 1.07, 1.03
+        const pitch = 1.11 - (4 - remaining) * 0.04;
         this.feedbackService.playEvent(SfxEvent.UiCountdown, { playbackRate: pitch });
       } else if (this.countdown === 1) {
         // 数字1，播放最后一个倒计时音效
